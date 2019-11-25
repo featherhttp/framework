@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Http;
 
 class Program
 {
-    public static async Task Main(string[] args)
+    static async Task Main(string[] args)
     {
         var app = HttpApplication.Create();
 
