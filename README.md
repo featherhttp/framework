@@ -7,7 +7,7 @@ A super lightweight low ceremony APIs for ASP.NET Core applications.
 - Take advantage of existing ASP.NET Core middleware and frameworks
 
 
-Hello World Sample
+### Hello World Sample
 
 ```C#
 using System;
@@ -37,10 +37,17 @@ class Program
 }
 ```
 
-ASP.NET Core API
+### ASP.NET Core Controller
 
 
 ```C#
+using System;
+using FeatherHttp;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
+
 public class HomeController
 {
     [HttpGet("/")]
