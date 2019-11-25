@@ -24,11 +24,13 @@ namespace FeatherHttp
     {
         public static IApplicationBuilder Create(Action<IServiceCollection> configure = null)
         {
+            var diagnoticListener = new DiagnosticListener("FeatherHttp");
             var services = new ServiceCollection()
                             .AddRouting()
                             .AddLogging()
                             .AddOptions()
-                            .AddSingleton(new DiagnosticListener("System.Http"))
+                            .AddSingleton(diagnoticListener)
+                            .AddSingleton<DiagnosticSource>(diagnoticListener)
                             .AddSingleton<IServer, KestrelServer>()
                             .AddSingleton<IConnectionListenerFactory, SocketTransportFactory>()
                             .AddSingleton<IWebHostEnvironment, WebHostEnvironment>();
