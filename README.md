@@ -36,3 +36,34 @@ class Program
     }
 }
 ```
+
+ASP.NET Core API
+
+
+```C#
+public class HomeController
+{
+    [HttpGet("/")]
+    public string HelloWorld() => "Hello World";
+}
+
+class Program
+{
+    static async Task Main(string[] args)
+    {
+        var app = HttpApplication.Create(services =>
+        {
+            services.AddControllers();
+        });
+
+        var routes = app.Router();
+
+        routes.MapControllers();
+
+        var server = await app.StartServerAsync("http://localhost:3000");
+
+        Console.WriteLine($"Listening on {string.Join(", ", server.Addresses)}");
+        Console.ReadLine();
+    }
+}
+```

@@ -3,20 +3,27 @@ using System;
 using FeatherHttp;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
+
+public class HomeController
+{
+    [HttpGet("/")]
+    public string HelloWorld() => "Hello World MVC";
+}
 
 class Program
 {
     static async Task Main(string[] args)
     {
-        var app = HttpApplication.Create();
+        var app = HttpApplication.Create(services =>
+        {
+            services.AddControllers();
+        });
 
         var routes = app.Router();
 
-        routes.MapGet("/", async context =>
-        {
-            await context.Response.WriteAsync("Hello World");
-        });
+        routes.MapControllers();
 
         var server = await app.StartServerAsync("http://localhost:3000");
 

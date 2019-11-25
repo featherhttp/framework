@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
@@ -25,6 +26,7 @@ namespace FeatherHttp
         public static IApplicationBuilder Create(Action<IServiceCollection> configure = null)
         {
             var diagnoticListener = new DiagnosticListener("FeatherHttp");
+            var whe = new WebHostEnvironment();
             var services = new ServiceCollection()
                             .AddRouting()
                             .AddLogging()
@@ -33,7 +35,7 @@ namespace FeatherHttp
                             .AddSingleton<DiagnosticSource>(diagnoticListener)
                             .AddSingleton<IServer, KestrelServer>()
                             .AddSingleton<IConnectionListenerFactory, SocketTransportFactory>()
-                            .AddSingleton<IWebHostEnvironment, WebHostEnvironment>();
+                            .AddSingleton<IWebHostEnvironment>(whe);
 
             services.AddOptions<KestrelServerOptions>()
                     .Configure<IServiceProvider>((o, sp) =>
@@ -98,7 +100,9 @@ namespace FeatherHttp
                 WebRootPath = "wwwroot";
                 ContentRootPath = Directory.GetCurrentDirectory();
                 ContentRootFileProvider = new PhysicalFileProvider(ContentRootPath);
-                WebRootFileProvider = new PhysicalFileProvider(Path.Combine(ContentRootPath, WebRootPath));
+                var webRoot = Path.Combine(ContentRootPath, WebRootPath);
+                WebRootFileProvider = Directory.Exists(webRoot) ? (IFileProvider)new PhysicalFileProvider(webRoot) : new NullFileProvider();
+                ApplicationName = Assembly.GetEntryAssembly().GetName().Name;
             }
 
             public IFileProvider WebRootFileProvider { get; set; }
