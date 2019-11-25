@@ -47,7 +47,7 @@ namespace FeatherHttp
             return new ApplicationBuilder(services.BuildServiceProvider());
         }
 
-        public static async Task<HttpServer> StartServerAsync(IApplicationBuilder app, params string[] addresses)
+        public static async Task<HttpServer> StartServerAsync(this IApplicationBuilder app, params string[] addresses)
         {
             var server = app.ApplicationServices.GetRequiredService<IServer>();
             var factory = app.ApplicationServices.GetService<IServiceScopeFactory>();
