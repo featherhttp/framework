@@ -2,10 +2,12 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Connections;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Hosting.Server.Features;
 using Microsoft.AspNetCore.Http;
@@ -14,6 +16,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 
 namespace FeatherHttp
 {
@@ -27,7 +30,8 @@ namespace FeatherHttp
                             .AddOptions()
                             .AddSingleton(new DiagnosticListener("System.Http"))
                             .AddSingleton<IServer, KestrelServer>()
-                            .AddSingleton<IConnectionListenerFactory, SocketTransportFactory>();
+                            .AddSingleton<IConnectionListenerFactory, SocketTransportFactory>()
+                            .AddSingleton<IWebHostEnvironment, WebHostEnvironment>();
 
             services.AddOptions<KestrelServerOptions>()
                     .Configure<IServiceProvider>((o, sp) =>
@@ -83,6 +87,24 @@ namespace FeatherHttp
             {
                 return _requestDelegate(context);
             }
+        }
+
+        private class WebHostEnvironment : IWebHostEnvironment
+        {
+            public WebHostEnvironment()
+            {
+                WebRootPath = "wwwroot";
+                ContentRootPath = Directory.GetCurrentDirectory();
+                ContentRootFileProvider = new PhysicalFileProvider(ContentRootPath);
+                WebRootFileProvider = new PhysicalFileProvider(Path.Combine(ContentRootPath, WebRootPath));
+            }
+
+            public IFileProvider WebRootFileProvider { get; set; }
+            public string WebRootPath { get; set; }
+            public string ApplicationName { get; set; }
+            public IFileProvider ContentRootFileProvider { get; set; }
+            public string ContentRootPath { get; set; }
+            public string EnvironmentName { get; set; }
         }
     }
 
