@@ -9,7 +9,7 @@ A super lightweight low ceremony framework for .NET Core.
 
 Hello World Sample
 
-```
+```C#
 using System;
 using FeatherHttp;
 using System.Threading.Tasks;
