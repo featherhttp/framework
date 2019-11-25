@@ -29,7 +29,7 @@ class Program
             await context.Response.WriteAsync("Hello World");
         });
 
-        var server = await HttpApplication.StartServerAsync(app, "http://localhost:3000");
+        var server = await app.StartServerAsync("http://localhost:3000");
 
         Console.WriteLine($"Listening on {string.Join(", ", server.Addresses)}");
         Console.ReadLine();
