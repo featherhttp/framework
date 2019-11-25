@@ -1,10 +1,10 @@
-## Feather HTTP Framework
+## Feather HTTP
 
-A super lightweight low ceremony framework for .NET Core.
+A super lightweight low ceremony APIs for ASP.NET Core applications.
 
 - Built on the same primitives as ASP.NET Core
 - Optimized for building HTTP APIs quickly
-- Take advantage of existing ASP.NET Core middleware
+- Take advantage of existing ASP.NET Core middleware and frameworks
 
 
 Hello World Sample
