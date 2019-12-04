@@ -18,6 +18,7 @@ using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.Extensions.Hosting;
 
 namespace FeatherHttp
 {
@@ -35,7 +36,9 @@ namespace FeatherHttp
                             .AddSingleton<DiagnosticSource>(diagnoticListener)
                             .AddSingleton<IServer, KestrelServer>()
                             .AddSingleton<IConnectionListenerFactory, SocketTransportFactory>()
-                            .AddSingleton<IWebHostEnvironment>(whe);
+                            .AddSingleton<IWebHostEnvironment>(whe)
+                            .AddSingleton<IHostEnvironment>(whe)
+                            .AddSingleton<IHostApplicationLifetime, HostLifetime>();
 
             services.AddOptions<KestrelServerOptions>()
                     .Configure<IServiceProvider>((o, sp) =>
@@ -111,6 +114,20 @@ namespace FeatherHttp
             public IFileProvider ContentRootFileProvider { get; set; }
             public string ContentRootPath { get; set; }
             public string EnvironmentName { get; set; }
+        }
+
+        private class HostLifetime : IHostApplicationLifetime
+        {
+            public CancellationToken ApplicationStarted => default;
+
+            public CancellationToken ApplicationStopped => default;
+
+            public CancellationToken ApplicationStopping => default;
+
+            public void StopApplication()
+            {
+                
+            }
         }
     }
 
