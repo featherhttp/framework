@@ -198,13 +198,15 @@ namespace FeatherHttp
     {
         private readonly IHost _host;
 
-        public IServiceProvider Services => _host.Services;
-
         public WebApplicationHost(IHost host, ApplicationBuilder applicationBuilder)
         {
             _host = host;
             ApplicationBuilder = applicationBuilder;
         }
+
+        public IServiceProvider Services => _host.Services;
+
+        public IWebHostEnvironment Environment => _host.Services.GetRequiredService<IWebHostEnvironment>();
 
         public IApplicationBuilder ApplicationBuilder { get; }
 
