@@ -5,9 +5,9 @@ using System.IO;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Routing;
@@ -19,16 +19,17 @@ using Microsoft.Extensions.Logging;
 
 namespace FeatherHttp
 {
-    public class WebApplicationHostBuilder
+    public class WebApplicationHostBuilder : IHostBuilder
     {
-        private readonly IWebHostBuilder _hostBuilder;
+        private readonly IHostBuilder _hostBuilder;
+        private string[] _urls;
 
-        public WebApplicationHostBuilder() : this(new WebHostBuilder())
+        public WebApplicationHostBuilder() : this(new HostBuilder())
         {
 
         }
 
-        public WebApplicationHostBuilder(IWebHostBuilder hostBuilder)
+        public WebApplicationHostBuilder(IHostBuilder hostBuilder)
         {
             _hostBuilder = hostBuilder;
 
@@ -36,13 +37,44 @@ namespace FeatherHttp
 
             // HACK: MVC and Identity do this horrible thing to get the hosting environment as an instance
             // from the service collection before it is built. That needs to be fixed...
-            var env = new WebHostEnvironment();
-            Services.AddSingleton<IWebHostEnvironment>(env);
+            Environment = new WebHostEnvironment();
+            Services.AddSingleton(Environment);
 
             // REVIEW: Since the configuration base is tied to the content root, it needs to be specified as part of 
             // builder creation. It's not changing in the current design.
-            Configuration = new ConfigurationBuilder().SetBasePath(env.ContentRootPath);
+            Configuration = new ConfigurationBuilder().SetBasePath(Environment.ContentRootPath);
             Logging = new LoggingBuilder(Services);
+        }
+
+        public IWebHostEnvironment Environment { get; }
+
+        public IServiceCollection Services { get; }
+
+        public IConfigurationBuilder Configuration { get; }
+
+        public ILoggingBuilder Logging { get; }
+
+        public IDictionary<object, object> Properties => throw new NotImplementedException();
+
+        public WebApplicationHost Build()
+        {
+            ApplicationBuilder applicationBuilder = null;
+
+            _hostBuilder.ConfigureWebHostDefaults(web =>
+            {
+                if (_urls != null)
+                {
+                    web.UseUrls(_urls);
+                }
+
+                web.Configure(app =>
+                {
+                    // The endpoints were already added on the outside
+                    applicationBuilder.UseEndpoints(_ => { });
+
+                    ApplyApplicationBuilder(applicationBuilder, (ApplicationBuilder)app);
+                });
+            });
 
             _hostBuilder.ConfigureServices(services =>
             {
@@ -59,25 +91,6 @@ namespace FeatherHttp
                     builder.Sources.Add(s);
                 }
             });
-        }
-
-        public IServiceCollection Services { get; }
-
-        public IConfigurationBuilder Configuration { get; }
-
-        public ILoggingBuilder Logging { get; }
-
-        public WebApplicationHost Build()
-        {
-            ApplicationBuilder applicationBuilder = null;
-
-            _hostBuilder.Configure(app =>
-            {
-                // The endpoints were already added on the outside
-                applicationBuilder.UseEndpoints(_ => { });
-
-                ApplyApplicationBuilder(applicationBuilder, (ApplicationBuilder)app);
-            });
 
             var host = _hostBuilder.Build();
             applicationBuilder = new ApplicationBuilder(host.Services);
@@ -87,7 +100,7 @@ namespace FeatherHttp
 
         public void UseUrls(params string[] urls)
         {
-            _hostBuilder.UseUrls(urls);
+            _urls = urls;
         }
 
         private static void ApplyApplicationBuilder(ApplicationBuilder source, ApplicationBuilder dest)
@@ -113,6 +126,41 @@ namespace FeatherHttp
             return (IList<Func<RequestDelegate, RequestDelegate>>)typeof(ApplicationBuilder)
                     .GetField("_components", BindingFlags.NonPublic | BindingFlags.Instance)
                     .GetValue(application);
+        }
+
+        IHost IHostBuilder.Build()
+        {
+            return _hostBuilder.Build();
+        }
+
+        public IHostBuilder ConfigureAppConfiguration(Action<HostBuilderContext, IConfigurationBuilder> configureDelegate)
+        {
+            return _hostBuilder.ConfigureAppConfiguration(configureDelegate);
+        }
+
+        public IHostBuilder ConfigureContainer<TContainerBuilder>(Action<HostBuilderContext, TContainerBuilder> configureDelegate)
+        {
+            return _hostBuilder.ConfigureContainer(configureDelegate);
+        }
+
+        public IHostBuilder ConfigureHostConfiguration(Action<IConfigurationBuilder> configureDelegate)
+        {
+            return _hostBuilder.ConfigureHostConfiguration(configureDelegate);
+        }
+
+        public IHostBuilder ConfigureServices(Action<HostBuilderContext, IServiceCollection> configureDelegate)
+        {
+            return _hostBuilder.ConfigureServices(configureDelegate);
+        }
+
+        public IHostBuilder UseServiceProviderFactory<TContainerBuilder>(IServiceProviderFactory<TContainerBuilder> factory)
+        {
+            return _hostBuilder.UseServiceProviderFactory(factory);
+        }
+
+        public IHostBuilder UseServiceProviderFactory<TContainerBuilder>(Func<HostBuilderContext, IServiceProviderFactory<TContainerBuilder>> factory)
+        {
+            return _hostBuilder.UseServiceProviderFactory(factory);
         }
 
         private class LoggingBuilder : ILoggingBuilder
@@ -148,11 +196,11 @@ namespace FeatherHttp
 
     public class WebApplicationHost : IHost
     {
-        private readonly IWebHost _host;
+        private readonly IHost _host;
 
         public IServiceProvider Services => _host.Services;
 
-        public WebApplicationHost(IWebHost host, ApplicationBuilder applicationBuilder)
+        public WebApplicationHost(IHost host, ApplicationBuilder applicationBuilder)
         {
             _host = host;
             ApplicationBuilder = applicationBuilder;
@@ -160,11 +208,11 @@ namespace FeatherHttp
 
         public IApplicationBuilder ApplicationBuilder { get; }
 
-        public IFeatureCollection ServerFeatures => _host.ServerFeatures;
+        public IFeatureCollection ServerFeatures => _host.Services.GetRequiredService<IServer>().Features;
 
         public static WebApplicationHostBuilder CreateDefaultBuilder(string[] args)
         {
-            return new WebApplicationHostBuilder(WebHost.CreateDefaultBuilder(args));
+            return new WebApplicationHostBuilder(Host.CreateDefaultBuilder(args));
         }
 
         public Task StartAsync(CancellationToken cancellationToken = default)

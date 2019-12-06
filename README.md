@@ -6,7 +6,6 @@ A super lightweight low ceremony APIs for ASP.NET Core applications.
 - Optimized for building HTTP APIs quickly
 - Take advantage of existing ASP.NET Core middleware and frameworks
 
-
 ### Hello World
 
 ```C#
