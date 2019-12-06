@@ -206,6 +206,8 @@ namespace FeatherHttp
 
         public IServiceProvider Services => _host.Services;
 
+        public IConfiguration Configuration => _host.Services.GetRequiredService<IConfiguration>();
+
         public IWebHostEnvironment Environment => _host.Services.GetRequiredService<IWebHostEnvironment>();
 
         public IApplicationBuilder ApplicationBuilder { get; }
