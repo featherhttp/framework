@@ -7,7 +7,7 @@ A super lightweight low ceremony APIs for ASP.NET Core applications.
 - Take advantage of existing ASP.NET Core middleware and frameworks
 
 
-### Hello World Sample
+### Hello World
 
 ```C#
 using FeatherHttp;
@@ -116,6 +116,51 @@ class Program
 
         routes.MapCarter();
 
+        await host.RunAsync();
+    }
+}
+```
+
+### GRPC
+
+```C#
+using FeatherHttp;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.DependencyInjection;
+using Grpc.Core;
+using Greet;
+
+public class GreeterService : Greeter.GreeterBase
+{
+    public override Task<HelloReply> SayHello(HelloRequest request, ServerCallContext context)
+    {
+        return Task.FromResult(new HelloReply
+        {
+            Message = "Hello " + request.Name
+        });
+    }
+}
+
+class Program
+{
+    static async Task Main(string[] args)
+    {
+        var builder = WebApplicationHost.CreateDefaultBuilder(args);
+        
+        builder.UseUrls("https://localhost:3000");
+
+        builder.Services.AddGrpc();
+
+        var host = builder.Build();
+
+        var app = host.ApplicationBuilder;
+
+        var routes = app.UseRouter();
+
+        routes.MapGrpcService<GreeterService>();
+        
         await host.RunAsync();
     }
 }
