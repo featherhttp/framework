@@ -10,29 +10,32 @@ A super lightweight low ceremony APIs for ASP.NET Core applications.
 ### Hello World Sample
 
 ```C#
-using System;
 using FeatherHttp;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Http;
 
 class Program
 {
     static async Task Main(string[] args)
     {
-        var app = HttpApplication.Create();
+        var builder = WebApplicationHost.CreateDefaultBuilder(args);
 
-        var routes = app.Router();
+        builder.UseUrls("http://localhost:3000");
+
+        var host = builder.Build();
+
+        var app = host.ApplicationBuilder;
+
+        var routes = app.UseRouter();
 
         routes.MapGet("/", async context =>
         {
             await context.Response.WriteAsync("Hello World");
         });
 
-        var server = await app.StartServerAsync("http://localhost:3000");
-
-        Console.WriteLine($"Listening on {string.Join(", ", server.Addresses)}");
-        Console.ReadLine();
+        await host.RunAsync();
     }
 }
 ```
@@ -41,12 +44,12 @@ class Program
 
 
 ```C#
-using System;
 using FeatherHttp;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Mvc;
 
 public class HomeController
 {
@@ -58,19 +61,21 @@ class Program
 {
     static async Task Main(string[] args)
     {
-        var app = HttpApplication.Create(services =>
-        {
-            services.AddControllers();
-        });
+        var builder = WebApplicationHost.CreateDefaultBuilder(args);
+        
+        builder.UseUrls("http://localhost:3000");
 
-        var routes = app.Router();
+        builder.Services.AddControllers();
+
+        var host = builder.Build();
+
+        var app = host.ApplicationBuilder;
+
+        var routes = app.UseRouter();
 
         routes.MapControllers();
-
-        var server = await app.StartServerAsync("http://localhost:3000");
-
-        Console.WriteLine($"Listening on {string.Join(", ", server.Addresses)}");
-        Console.ReadLine();
+        
+        await host.RunAsync();
     }
 }
 ```

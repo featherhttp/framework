@@ -1,99 +1,128 @@
 ﻿
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Connections;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Hosting.Server;
-using Microsoft.AspNetCore.Hosting.Server.Features;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.AspNetCore.Server.Kestrel.Core;
-using Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
 namespace FeatherHttp
 {
-    public static class HttpApplication
+    public class WebApplicationHostBuilder
     {
-        public static IApplicationBuilder Create(Action<IServiceCollection> configure = null)
+        private readonly IWebHostBuilder _hostBuilder;
+
+        public WebApplicationHostBuilder() : this(new WebHostBuilder())
         {
-            var diagnoticListener = new DiagnosticListener("FeatherHttp");
-            var whe = new WebHostEnvironment();
-            var services = new ServiceCollection()
-                            .AddRouting()
-                            .AddLogging()
-                            .AddOptions()
-                            .AddSingleton(diagnoticListener)
-                            .AddSingleton<DiagnosticSource>(diagnoticListener)
-                            .AddSingleton<IServer, KestrelServer>()
-                            .AddSingleton<IConnectionListenerFactory, SocketTransportFactory>()
-                            .AddSingleton<IWebHostEnvironment>(whe)
-                            .AddSingleton<IHostEnvironment>(whe)
-                            .AddSingleton<IHostApplicationLifetime, HostLifetime>();
 
-            services.AddOptions<KestrelServerOptions>()
-                    .Configure<IServiceProvider>((o, sp) =>
-                    {
-                        o.ApplicationServices = sp;
-                    });
-
-
-            configure?.Invoke(services);
-
-            return new ApplicationBuilder(services.BuildServiceProvider());
         }
 
-        public static async Task<HttpServer> StartServerAsync(this IApplicationBuilder app, params string[] addresses)
+        public WebApplicationHostBuilder(IWebHostBuilder hostBuilder)
         {
-            var server = app.ApplicationServices.GetRequiredService<IServer>();
-            var factory = app.ApplicationServices.GetService<IServiceScopeFactory>();
+            _hostBuilder = hostBuilder;
 
-            var feature = server.Features.Get<IServerAddressesFeature>();
+            Services = new ServiceCollection();
 
-            foreach (var address in addresses)
+            // HACK: MVC and Identity do this horrible thing to get the hosting environment as an instance
+            // from the service collection before it is built. That needs to be fixed...
+            var env = new WebHostEnvironment();
+            Services.AddSingleton<IWebHostEnvironment>(env);
+
+            // REVIEW: Since the configuration base is tied to the content root, it needs to be specified as part of 
+            // builder creation. It's not changing in the current design.
+            Configuration = new ConfigurationBuilder().SetBasePath(env.ContentRootPath);
+            Logging = new LoggingBuilder(Services);
+
+            _hostBuilder.ConfigureServices(services =>
             {
-                feature.Addresses.Add(address);
-            }
+                foreach (var s in Services)
+                {
+                    services.Add(s);
+                }
+            });
 
-            await server.StartAsync(new Application(factory, app.UseEndpoints(e => { }).Build()), default);
-            return new HttpServer(server);
+            _hostBuilder.ConfigureAppConfiguration(builder =>
+            {
+                foreach (var s in Configuration.Sources)
+                {
+                    builder.Sources.Add(s);
+                }
+            });
         }
 
-        private class Application : IHttpApplication<HttpContext>
+        public IServiceCollection Services { get; }
+
+        public IConfigurationBuilder Configuration { get; }
+
+        public ILoggingBuilder Logging { get; }
+
+        public WebApplicationHost Build()
         {
-            private readonly RequestDelegate _requestDelegate;
-            private readonly IServiceScopeFactory _serviceScopeFactory;
-            public Application(IServiceScopeFactory serviceScopeFactory, RequestDelegate requestDelegate)
+            ApplicationBuilder applicationBuilder = null;
+
+            _hostBuilder.Configure(app =>
             {
-                _requestDelegate = requestDelegate;
-                _serviceScopeFactory = serviceScopeFactory;
+                // The endpoints were already added on the outside
+                applicationBuilder.UseEndpoints(_ => { });
+
+                ApplyApplicationBuilder(applicationBuilder, (ApplicationBuilder)app);
+            });
+
+            var host = _hostBuilder.Build();
+            applicationBuilder = new ApplicationBuilder(host.Services);
+
+            return new WebApplicationHost(host, applicationBuilder);
+        }
+
+        public void UseUrls(params string[] urls)
+        {
+            _hostBuilder.UseUrls(urls);
+        }
+
+        private static void ApplyApplicationBuilder(ApplicationBuilder source, ApplicationBuilder dest)
+        {
+            var sourceComponents = GetComponentList(source);
+            var destComponents = GetComponentList(dest);
+
+            foreach (var item in source.Properties)
+            {
+                dest.Properties[item.Key] = item.Value;
             }
 
-            public HttpContext CreateContext(IFeatureCollection contextFeatures)
+            // Add the middleware entries
+            foreach (var component in sourceComponents)
             {
-                var context = new DefaultHttpContext(contextFeatures);
-                context.ServiceScopeFactory = _serviceScopeFactory;
-                return context;
+                destComponents.Add(component);
+            }
+        }
+
+        private static IList<Func<RequestDelegate, RequestDelegate>> GetComponentList(ApplicationBuilder application)
+        {
+            // HACK: We need to get the list of middleware from the application builder so it can be mutated
+            return (IList<Func<RequestDelegate, RequestDelegate>>)typeof(ApplicationBuilder)
+                    .GetField("_components", BindingFlags.NonPublic | BindingFlags.Instance)
+                    .GetValue(application);
+        }
+
+        private class LoggingBuilder : ILoggingBuilder
+        {
+            public LoggingBuilder(IServiceCollection services)
+            {
+                Services = services;
             }
 
-            public void DisposeContext(HttpContext context, Exception exception)
-            {
-
-            }
-
-            public Task ProcessRequestAsync(HttpContext context)
-            {
-                return _requestDelegate(context);
-            }
+            public IServiceCollection Services { get; }
         }
 
         private class WebHostEnvironment : IWebHostEnvironment
@@ -115,19 +144,42 @@ namespace FeatherHttp
             public string ContentRootPath { get; set; }
             public string EnvironmentName { get; set; }
         }
+    }
 
-        private class HostLifetime : IHostApplicationLifetime
+    public class WebApplicationHost : IHost
+    {
+        private readonly IWebHost _host;
+
+        public IServiceProvider Services => _host.Services;
+
+        public WebApplicationHost(IWebHost host, ApplicationBuilder applicationBuilder)
         {
-            public CancellationToken ApplicationStarted => default;
+            _host = host;
+            ApplicationBuilder = applicationBuilder;
+        }
 
-            public CancellationToken ApplicationStopped => default;
+        public IApplicationBuilder ApplicationBuilder { get; }
 
-            public CancellationToken ApplicationStopping => default;
+        public IFeatureCollection ServerFeatures => _host.ServerFeatures;
 
-            public void StopApplication()
-            {
-                
-            }
+        public static WebApplicationHostBuilder CreateDefaultBuilder(string[] args)
+        {
+            return new WebApplicationHostBuilder(WebHost.CreateDefaultBuilder(args));
+        }
+
+        public Task StartAsync(CancellationToken cancellationToken = default)
+        {
+            return _host.StartAsync(cancellationToken);
+        }
+
+        public Task StopAsync(CancellationToken cancellationToken = default)
+        {
+            return _host.StopAsync(cancellationToken);
+        }
+
+        public void Dispose()
+        {
+            _host.Dispose();
         }
     }
 
@@ -135,27 +187,10 @@ namespace FeatherHttp
     {
         private const string EndpointRouteBuilder = "__EndpointRouteBuilder";
 
-        public static IEndpointRouteBuilder Router(this IApplicationBuilder app)
+        public static IEndpointRouteBuilder UseRouter(this IApplicationBuilder app)
         {
             app.UseRouting();
             return (IEndpointRouteBuilder)app.Properties[EndpointRouteBuilder];
-        }
-    }
-
-    public class HttpServer
-    {
-        private IServer _server;
-
-        public HttpServer(IServer server)
-        {
-            _server = server;
-        }
-
-        public ICollection<string> Addresses => _server.Features.Get<IServerAddressesFeature>().Addresses;
-
-        public Task StopAsync(CancellationToken cancellationToken = default)
-        {
-            return _server.StopAsync(cancellationToken);
         }
     }
 }
