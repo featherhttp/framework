@@ -11,6 +11,7 @@ namespace SignalRClient
         {
             var connection = new HubConnectionBuilder()
                 .WithUrl("http://localhost:3000/chat")
+                .WithAutomaticReconnect()
                 .Build();
 
             connection.Closed += async (error) =>
