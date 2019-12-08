@@ -190,14 +190,14 @@ class Program
 - Yaml configuration provider
 
 ```C#
-using FeatherHttp;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.Hosting;
-using Microsoft.AspNetCore.Http;
-using Serilog;
 using Autofac.Extensions.DependencyInjection;
+using FeatherHttp;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
+using Serilog;
 
 class Program
 {
@@ -234,5 +234,4 @@ class Program
 
         await app.RunAsync();
     }
-}
-```
+}```

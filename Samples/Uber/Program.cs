@@ -1,11 +1,11 @@
-﻿using FeatherHttp;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.Hosting;
-using Microsoft.AspNetCore.Http;
-using Serilog;
+﻿using System.Threading.Tasks;
 using Autofac.Extensions.DependencyInjection;
+using FeatherHttp;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
+using Serilog;
 
 class Program
 {
