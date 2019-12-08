@@ -3,9 +3,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Features;
-using System;
-using System.Collections.Generic;
 using Microsoft.AspNetCore.Routing;
 
 class Program
@@ -18,7 +15,7 @@ class Program
 
         var app = builder.Build();
 
-        app.UseRouting();
+        app.UseDeveloperExceptionPage();
 
         app.MapGet("/", async context =>
         {

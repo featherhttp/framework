@@ -69,13 +69,38 @@ namespace FeatherHttp
 
                 web.Configure(app =>
                 {
-                    // HACK: Some magic going on here
-                    webAppHost.CopyRouteDataSources();
+                    var hasRoutesWithoutRouteMiddleware = false;
 
                     // The endpoints were already added on the outside
-                    webAppHost.UseEndpoints(_ => { });
+                    if (webAppHost.DataSources.Count > 0)
+                    {
+                        // The user did not register the routing middleware
+                        if (webAppHost.RouteBuilder == null)
+                        {
+                            hasRoutesWithoutRouteMiddleware = true;
 
-                    ApplyApplicationBuilder(webAppHost.ApplicationBuilder, (ApplicationBuilder)app);
+                            // Add the routing middleware first
+                            app.UseRouting();
+
+                            // Copy the routes over
+                            var routes = (IEndpointRouteBuilder)app.Properties[WebApplicationHost.EndpointRouteBuilder];
+                            foreach (var ds in webAppHost.DataSources)
+                            {
+                                routes.DataSources.Add(ds);
+                            }
+                        }
+                        else
+                        {
+                            foreach (var ds in webAppHost.DataSources)
+                            {
+                                webAppHost.RouteBuilder.DataSources.Add(ds);
+                            }
+
+                            webAppHost.UseEndpoints(_ => { });
+                        }
+                    }
+
+                    ApplyApplicationBuilder(webAppHost, (ApplicationBuilder)app, hasRoutesWithoutRouteMiddleware);
                 });
             });
 
@@ -105,9 +130,9 @@ namespace FeatherHttp
             _urls = urls;
         }
 
-        private static void ApplyApplicationBuilder(ApplicationBuilder source, ApplicationBuilder dest)
+        private static void ApplyApplicationBuilder(WebApplicationHost source, ApplicationBuilder dest, bool hasRoutesWithoutRouteMiddleware)
         {
-            var sourceComponents = GetComponentList(source);
+            var sourceComponents = GetComponentList(source.ApplicationBuilder);
             var destComponents = GetComponentList(dest);
 
             foreach (var item in source.Properties)
@@ -116,9 +141,15 @@ namespace FeatherHttp
             }
 
             // Add the middleware entries
-            foreach (var component in sourceComponents)
+            foreach (var ds in sourceComponents)
             {
-                destComponents.Add(component);
+                destComponents.Add(ds);
+            }
+
+            // Add the endpoint middleware
+            if (hasRoutesWithoutRouteMiddleware)
+            {
+                dest.UseEndpoints(e => { });
             }
         }
 
@@ -198,7 +229,7 @@ namespace FeatherHttp
 
     public class WebApplicationHost : IHost, IApplicationBuilder, IEndpointRouteBuilder
     {
-        private const string EndpointRouteBuilder = "__EndpointRouteBuilder";
+        public const string EndpointRouteBuilder = "__EndpointRouteBuilder";
 
         private readonly IHost _host;
         private readonly List<EndpointDataSource> _dataSources = new List<EndpointDataSource>();
@@ -236,14 +267,6 @@ namespace FeatherHttp
 
         public IServiceProvider ServiceProvider => Services;
 
-        internal void CopyRouteDataSources()
-        {
-            foreach (var ds in _dataSources)
-            {
-                RouteBuilder?.DataSources.Add(ds);
-            }
-        }
-
         public static WebApplicationHostBuilder CreateDefaultBuilder(string[] args)
         {
             return new WebApplicationHostBuilder(Host.CreateDefaultBuilder(args));
@@ -276,7 +299,8 @@ namespace FeatherHttp
 
         public IApplicationBuilder Use(Func<RequestDelegate, RequestDelegate> middleware)
         {
-            return ApplicationBuilder.Use(middleware);
+            ApplicationBuilder.Use(middleware);
+            return this;
         }
 
         public IApplicationBuilder CreateApplicationBuilder() => New();

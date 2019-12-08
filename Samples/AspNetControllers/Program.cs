@@ -23,8 +23,6 @@ class Program
 
         var app = builder.Build();
 
-        app.UseRouting();
-
         app.MapControllers();
 
         await app.RunAsync();

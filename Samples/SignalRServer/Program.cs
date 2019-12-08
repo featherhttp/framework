@@ -22,8 +22,6 @@ class Program
 
         var app = builder.Build();
 
-        app.UseRouting();
-
         app.MapHub<Chat>("/chat");
 
         await app.RunAsync();

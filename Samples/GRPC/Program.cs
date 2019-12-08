@@ -36,8 +36,6 @@ class Program
 
         var app = builder.Build();
 
-        app.UseRouting();
-
         app.MapGrpcService<GreeterService>();
 
         await app.RunAsync();
