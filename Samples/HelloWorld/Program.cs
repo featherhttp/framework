@@ -15,8 +15,6 @@ class Program
 
         var app = builder.Build();
 
-        app.UseDeveloperExceptionPage();
-
         app.MapGet("/", async context =>
         {
             await context.Response.WriteAsync("Hello World");
