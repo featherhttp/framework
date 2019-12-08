@@ -23,9 +23,7 @@ class Program
 
         builder.UseUrls("http://localhost:3000");
 
-        var host = builder.Build();
-
-        var app = host.ApplicationBuilder;
+        var app = builder.Build();
 
         app.UseRouting();
 
