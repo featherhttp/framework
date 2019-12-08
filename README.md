@@ -25,8 +25,6 @@ class Program
 
         var app = builder.Build();
 
-        app.UseRouting();
-
         app.MapGet("/", async context =>
         {
             await context.Response.WriteAsync("Hello World");
@@ -66,8 +64,6 @@ class Program
 
         var app = builder.Build();
 
-        app.UseRouting();
-
         app.MapControllers();
         
         await app.RunAsync();
@@ -105,8 +101,6 @@ class Program
 
         var app = builder.Build();
 
-        app.UseRouting();
-
         app.MapCarter();
 
         await app.RunAsync();
@@ -140,8 +134,6 @@ class Program
         builder.Services.AddSignalR();
 
         var app = builder.Build();
-
-        app.UseRouting();
 
         app.MapHub<Chat>("/chat");
         
@@ -183,8 +175,6 @@ class Program
         builder.Services.AddGrpc();
 
         var host = builder.Build();
-
-        app.UseRouting();
 
         app.MapGrpcService<GreeterService>();
         
