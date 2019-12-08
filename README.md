@@ -235,7 +235,7 @@ class Program
             app.UseDeveloperExceptionPage();
         }
 
-        app.UseRouter();
+        app.UseRouting();
 
         app.MapGet("/", async context =>
         {
