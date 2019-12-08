@@ -21,14 +21,12 @@ class Program
 
         builder.Services.AddControllers();
 
-        var host = builder.Build();
+        var app = builder.Build();
 
-        var app = host.ApplicationBuilder;
+        app.UseRouting();
 
-        var routes = app.UseRouter();
+        app.MapControllers();
 
-        routes.MapControllers();
-
-        await host.RunAsync();
+        await app.RunAsync();
     }
 }

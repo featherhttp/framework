@@ -26,22 +26,20 @@ class Program
 
         builder.UseUrls("http://localhost:3000");
 
-        var host = builder.Build();
+        var app = builder.Build();
 
-        var app = host.ApplicationBuilder;
-
-        if (host.Environment.IsDevelopment())
+        if (app.Environment.IsDevelopment())
         {
             app.UseDeveloperExceptionPage();
         }
 
-        var routes = app.UseRouter();
+        app.UseRouting();
 
-        routes.MapGet("/", async context =>
+        app.MapGet("/", async context =>
         {
             await context.Response.WriteAsync("Hello World");
         });
 
-        await host.RunAsync();
+        await app.RunAsync();
     }
 }

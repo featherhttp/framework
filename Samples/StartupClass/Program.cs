@@ -5,6 +5,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Routing;
 
 public class HomeController
 {
@@ -23,11 +24,11 @@ class Program
         var startup = new Startup();
         startup.ConfigureServices(builder.Services);
 
-        var host = builder.Build();
+        var app = builder.Build();
 
-        startup.Configure(host.ApplicationBuilder, host.Environment);
+        startup.Configure(app, app, app.Environment);
 
-        await host.RunAsync();
+        await app.RunAsync();
     }
 }
 
@@ -38,14 +39,14 @@ public class Startup
         services.AddControllers();
     }
 
-    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+    public void Configure(IApplicationBuilder app, IEndpointRouteBuilder routes, IWebHostEnvironment env)
     {
         if (env.IsDevelopment())
         {
             app.UseDeveloperExceptionPage();
         }
 
-        var routes = app.UseRouter();
+        app.UseRouting();
 
         routes.MapControllers();
     }

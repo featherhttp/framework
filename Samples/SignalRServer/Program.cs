@@ -20,14 +20,12 @@ class Program
 
         builder.Services.AddSignalR();
 
-        var host = builder.Build();
+        var app = builder.Build();
 
-        var app = host.ApplicationBuilder;
+        app.UseRouting();
 
-        var routes = app.UseRouter();
+        app.MapHub<Chat>("/chat");
 
-        routes.MapHub<Chat>("/chat");
-
-        await host.RunAsync();
+        await app.RunAsync();
     }
 }

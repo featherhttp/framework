@@ -54,11 +54,11 @@ namespace FeatherHttp
 
         public ILoggingBuilder Logging { get; }
 
-        public IDictionary<object, object> Properties => throw new NotImplementedException();
+        public IDictionary<object, object> Properties => _hostBuilder.Properties;
 
         public WebApplicationHost Build()
         {
-            ApplicationBuilder applicationBuilder = null;
+            WebApplicationHost webAppHost = null;
 
             _hostBuilder.ConfigureWebHostDefaults(web =>
             {
@@ -69,10 +69,13 @@ namespace FeatherHttp
 
                 web.Configure(app =>
                 {
-                    // The endpoints were already added on the outside
-                    applicationBuilder.UseEndpoints(_ => { });
+                    // HACK: Some magic going on here
+                    webAppHost.CopyRouteDataSources();
 
-                    ApplyApplicationBuilder(applicationBuilder, (ApplicationBuilder)app);
+                    // The endpoints were already added on the outside
+                    webAppHost.UseEndpoints(_ => { });
+
+                    ApplyApplicationBuilder(webAppHost.ApplicationBuilder, (ApplicationBuilder)app);
                 });
             });
 
@@ -93,9 +96,8 @@ namespace FeatherHttp
             });
 
             var host = _hostBuilder.Build();
-            applicationBuilder = new ApplicationBuilder(host.Services);
 
-            return new WebApplicationHost(host, applicationBuilder);
+            return webAppHost = new WebApplicationHost(host);
         }
 
         public void UseUrls(params string[] urls)
@@ -194,14 +196,17 @@ namespace FeatherHttp
         }
     }
 
-    public class WebApplicationHost : IHost
+    public class WebApplicationHost : IHost, IApplicationBuilder, IEndpointRouteBuilder
     {
-        private readonly IHost _host;
+        private const string EndpointRouteBuilder = "__EndpointRouteBuilder";
 
-        public WebApplicationHost(IHost host, ApplicationBuilder applicationBuilder)
+        private readonly IHost _host;
+        private readonly List<EndpointDataSource> _dataSources = new List<EndpointDataSource>();
+
+        public WebApplicationHost(IHost host)
         {
             _host = host;
-            ApplicationBuilder = applicationBuilder;
+            ApplicationBuilder = new ApplicationBuilder(host.Services);
         }
 
         public IServiceProvider Services => _host.Services;
@@ -210,9 +215,34 @@ namespace FeatherHttp
 
         public IWebHostEnvironment Environment => _host.Services.GetRequiredService<IWebHostEnvironment>();
 
-        public IApplicationBuilder ApplicationBuilder { get; }
-
         public IFeatureCollection ServerFeatures => _host.Services.GetRequiredService<IServer>().Features;
+
+        public IServiceProvider ApplicationServices { get => ApplicationBuilder.ApplicationServices; set => ApplicationBuilder.ApplicationServices = value; }
+
+        public IDictionary<string, object> Properties => ApplicationBuilder.Properties;
+
+        public ICollection<EndpointDataSource> DataSources => _dataSources;
+
+        internal IEndpointRouteBuilder RouteBuilder
+        {
+            get
+            {
+                Properties.TryGetValue(EndpointRouteBuilder, out var value);
+                return (IEndpointRouteBuilder)value;
+            }
+        }
+
+        internal ApplicationBuilder ApplicationBuilder { get; }
+
+        public IServiceProvider ServiceProvider => Services;
+
+        internal void CopyRouteDataSources()
+        {
+            foreach (var ds in _dataSources)
+            {
+                RouteBuilder?.DataSources.Add(ds);
+            }
+        }
 
         public static WebApplicationHostBuilder CreateDefaultBuilder(string[] args)
         {
@@ -233,16 +263,22 @@ namespace FeatherHttp
         {
             _host.Dispose();
         }
-    }
 
-    public static class ApplicationBuilderExtensions
-    {
-        private const string EndpointRouteBuilder = "__EndpointRouteBuilder";
-
-        public static IEndpointRouteBuilder UseRouter(this IApplicationBuilder app)
+        public RequestDelegate Build()
         {
-            app.UseRouting();
-            return (IEndpointRouteBuilder)app.Properties[EndpointRouteBuilder];
+            return ApplicationBuilder.Build();
         }
+
+        public IApplicationBuilder New()
+        {
+            return ApplicationBuilder.New();
+        }
+
+        public IApplicationBuilder Use(Func<RequestDelegate, RequestDelegate> middleware)
+        {
+            return ApplicationBuilder.Use(middleware);
+        }
+
+        public IApplicationBuilder CreateApplicationBuilder() => New();
     }
 }

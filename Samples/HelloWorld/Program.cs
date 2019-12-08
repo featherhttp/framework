@@ -3,6 +3,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Features;
+using System;
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Routing;
 
 class Program
 {
@@ -12,17 +16,15 @@ class Program
 
         builder.UseUrls("http://localhost:3000");
 
-        var host = builder.Build();
+        var app = builder.Build();
 
-        var app = host.ApplicationBuilder;
+        app.UseRouting();
 
-        var routes = app.UseRouter();
-
-        routes.MapGet("/", async context =>
+        app.MapGet("/", async context =>
         {
             await context.Response.WriteAsync("Hello World");
         });
 
-        await host.RunAsync();
+        await app.RunAsync();
     }
 }

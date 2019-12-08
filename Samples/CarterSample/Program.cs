@@ -23,14 +23,12 @@ class Program
 
         builder.Services.AddCarter();
 
-        var host = builder.Build();
+        var app = builder.Build();
 
-        var app = host.ApplicationBuilder;
+        app.UseRouting();
 
-        var routes = app.UseRouter();
+        app.MapCarter();
 
-        routes.MapCarter();
-
-        await host.RunAsync();
+        await app.RunAsync();
     }
 }

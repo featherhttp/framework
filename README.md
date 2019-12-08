@@ -27,14 +27,14 @@ class Program
 
         var app = host.ApplicationBuilder;
 
-        var routes = app.UseRouter();
+        app.UseRouting();
 
-        routes.MapGet("/", async context =>
+        app.MapGet("/", async context =>
         {
             await context.Response.WriteAsync("Hello World");
         });
 
-        await host.RunAsync();
+        await app.RunAsync();
     }
 }
 ```
@@ -66,15 +66,13 @@ class Program
 
         builder.Services.AddControllers();
 
-        var host = builder.Build();
+        var app = builder.Build();
 
-        var app = host.ApplicationBuilder;
+        app.UseRouting();
 
-        var routes = app.UseRouter();
-
-        routes.MapControllers();
+        app.MapControllers();
         
-        await host.RunAsync();
+        await app.RunAsync();
     }
 }
 ```
@@ -107,15 +105,13 @@ class Program
 
         builder.Services.AddCarter();
 
-        var host = builder.Build();
+        var app = builder.Build();
 
-        var app = host.ApplicationBuilder;
+        app.UseRouting();
 
-        var routes = app.UseRouter();
+        app.MapCarter();
 
-        routes.MapCarter();
-
-        await host.RunAsync();
+        await app.RunAsync();
     }
 }
 ```
@@ -145,15 +141,13 @@ class Program
 
         builder.Services.AddSignalR();
 
-        var host = builder.Build();
+        var app = builder.Build();
 
-        var app = host.ApplicationBuilder;
+        app.UseRouting();
 
-        var routes = app.UseRouter();
-
-        routes.MapHub<Chat>("/chat");
+        app.MapHub<Chat>("/chat");
         
-        await host.RunAsync();
+        await app.RunAsync();
     }
 }
 ```
@@ -192,13 +186,11 @@ class Program
 
         var host = builder.Build();
 
-        var app = host.ApplicationBuilder;
+        app.UseRouting();
 
-        var routes = app.UseRouter();
-
-        routes.MapGrpcService<GreeterService>();
+        app.MapGrpcService<GreeterService>();
         
-        await host.RunAsync();
+        await app.RunAsync();
     }
 }
 ```
@@ -238,80 +230,21 @@ class Program
 
         builder.UseUrls("http://localhost:3000");
 
-        var host = builder.Build();
+        var app = builder.Build();
 
-        var app = host.ApplicationBuilder;
-
-        if (host.Environment.IsDevelopment())
+        if (app.Environment.IsDevelopment())
         {
             app.UseDeveloperExceptionPage();
         }
 
-        var routes = app.UseRouter();
+        app.UseRouter();
 
-        routes.MapGet("/", async context =>
+        app.MapGet("/", async context =>
         {
             await context.Response.WriteAsync("Hello World");
         });
 
-        await host.RunAsync();
-    }
-}
-```
-
-### Startup class
-
-```C#
-using FeatherHttp;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Hosting;
-
-public class HomeController
-{
-    [HttpGet("/")]
-    public string HelloWorld() => "Hello World";
-}
-
-class Program
-{
-    static async Task Main(string[] args)
-    {
-        var builder = WebApplicationHost.CreateDefaultBuilder(args);
-
-        builder.UseUrls("http://localhost:3000");
-
-        var startup = new Startup();
-        startup.ConfigureServices(builder.Services);
-
-        var host = builder.Build();
-
-        startup.Configure(host.ApplicationBuilder, host.Environment);
-
-        await host.RunAsync();
-    }
-}
-
-public class Startup
-{
-    public void ConfigureServices(IServiceCollection services)
-    {
-        services.AddControllers();
-    }
-
-    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-    {
-        if (env.IsDevelopment())
-        {
-            app.UseDeveloperExceptionPage();
-        }
-
-        var routes = app.UseRouter();
-
-        routes.MapControllers();
+        await app.RunAsync();
     }
 }
 ```

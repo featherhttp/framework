@@ -34,14 +34,12 @@ class Program
 
         builder.Services.AddGrpc();
 
-        var host = builder.Build();
+        var app = builder.Build();
 
-        var app = host.ApplicationBuilder;
+        app.UseRouting();
 
-        var routes = app.UseRouter();
+        app.MapGrpcService<GreeterService>();
 
-        routes.MapGrpcService<GreeterService>();
-
-        await host.RunAsync();
+        await app.RunAsync();
     }
 }
