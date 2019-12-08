@@ -238,6 +238,7 @@ namespace FeatherHttp
         {
             _host = host;
             ApplicationBuilder = new ApplicationBuilder(host.Services);
+            Logger = host.Services.GetRequiredService<ILoggerFactory>().CreateLogger(Environment.ApplicationName);
         }
 
         public IServiceProvider Services => _host.Services;
@@ -245,6 +246,8 @@ namespace FeatherHttp
         public IConfiguration Configuration => _host.Services.GetRequiredService<IConfiguration>();
 
         public IWebHostEnvironment Environment => _host.Services.GetRequiredService<IWebHostEnvironment>();
+
+        public ILogger Logger { get; }
 
         public IFeatureCollection ServerFeatures => _host.Services.GetRequiredService<IServer>().Features;
 
