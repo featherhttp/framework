@@ -258,6 +258,8 @@ namespace FeatherHttp
 
         public IWebHostEnvironment Environment => _host.Services.GetRequiredService<IWebHostEnvironment>();
 
+        public IHostApplicationLifetime ApplicationLifetime => _host.Services.GetRequiredService<IHostApplicationLifetime>();
+
         public ILogger Logger { get; }
 
         public IFeatureCollection ServerFeatures => _host.Services.GetRequiredService<IServer>().Features;
