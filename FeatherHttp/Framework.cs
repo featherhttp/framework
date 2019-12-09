@@ -43,6 +43,7 @@ namespace FeatherHttp
             // REVIEW: Since the configuration base is tied to the content root, it needs to be specified as part of 
             // builder creation. It's not changing in the current design.
             Configuration = new ConfigurationBuilder().SetBasePath(Environment.ContentRootPath);
+            HostConfiguration = new ConfigurationBuilder().SetBasePath(Environment.ContentRootPath);
             Logging = new LoggingBuilder(Services);
         }
 
@@ -51,6 +52,8 @@ namespace FeatherHttp
         public IServiceCollection Services { get; }
 
         public IConfigurationBuilder Configuration { get; }
+
+        public IConfigurationBuilder HostConfiguration { get; }
 
         public ILoggingBuilder Logging { get; }
 
@@ -115,6 +118,14 @@ namespace FeatherHttp
             _hostBuilder.ConfigureAppConfiguration(builder =>
             {
                 foreach (var s in Configuration.Sources)
+                {
+                    builder.Sources.Add(s);
+                }
+            });
+
+            _hostBuilder.ConfigureHostConfiguration(builder =>
+            {
+                foreach (var s in HostConfiguration.Sources)
                 {
                     builder.Sources.Add(s);
                 }
