@@ -61,7 +61,7 @@ namespace FeatherHttp
 
         public WebApplicationHost Build()
         {
-            WebApplicationHost webAppHost = null;
+            WebApplicationHost sourcePipeline = null;
 
             _hostBuilder.ConfigureWebHostDefaults(web =>
             {
@@ -70,40 +70,50 @@ namespace FeatherHttp
                     web.UseUrls(_urls);
                 }
 
-                web.Configure(app =>
+                web.Configure(destinationPipeline =>
                 {
-                    var hasRoutesWithoutRouteMiddleware = false;
-
                     // The endpoints were already added on the outside
-                    if (webAppHost.DataSources.Count > 0)
+                    if (sourcePipeline.DataSources.Count > 0)
                     {
                         // The user did not register the routing middleware
-                        if (webAppHost.RouteBuilder == null)
+                        if (sourcePipeline.RouteBuilder == null)
                         {
-                            hasRoutesWithoutRouteMiddleware = true;
-
                             // Add the routing middleware first
-                            app.UseRouting();
+                            destinationPipeline.UseRouting();
 
                             // Copy the routes over
-                            var routes = (IEndpointRouteBuilder)app.Properties[WebApplicationHost.EndpointRouteBuilder];
-                            foreach (var ds in webAppHost.DataSources)
+                            var routes = (IEndpointRouteBuilder)destinationPipeline.Properties[WebApplicationHost.EndpointRouteBuilder];
+                            foreach (var ds in sourcePipeline.DataSources)
                             {
                                 routes.DataSources.Add(ds);
                             }
+
+                            // Chain the pipeline
+                            destinationPipeline.Use(next =>
+                            {
+                                sourcePipeline.Run(next);
+                                return sourcePipeline.Build();
+                            });
+
+                            destinationPipeline.UseEndpoints(e => { });
                         }
                         else
                         {
-                            foreach (var ds in webAppHost.DataSources)
+                            foreach (var ds in sourcePipeline.DataSources)
                             {
-                                webAppHost.RouteBuilder.DataSources.Add(ds);
+                                sourcePipeline.RouteBuilder.DataSources.Add(ds);
                             }
 
-                            webAppHost.UseEndpoints(_ => { });
+                            sourcePipeline.UseEndpoints(_ => { });
+
+                            destinationPipeline.Run(sourcePipeline.Build());
                         }
                     }
 
-                    ApplyApplicationBuilder(webAppHost, (ApplicationBuilder)app, hasRoutesWithoutRouteMiddleware);
+                    foreach (var item in sourcePipeline.Properties)
+                    {
+                        destinationPipeline.Properties[item.Key] = item.Value;
+                    }
                 });
             });
 
@@ -133,43 +143,12 @@ namespace FeatherHttp
 
             var host = _hostBuilder.Build();
 
-            return webAppHost = new WebApplicationHost(host);
+            return sourcePipeline = new WebApplicationHost(host);
         }
 
         public void UseUrls(params string[] urls)
         {
             _urls = urls;
-        }
-
-        private static void ApplyApplicationBuilder(WebApplicationHost source, ApplicationBuilder dest, bool hasRoutesWithoutRouteMiddleware)
-        {
-            var sourceComponents = GetComponentList(source.ApplicationBuilder);
-            var destComponents = GetComponentList(dest);
-
-            foreach (var item in source.Properties)
-            {
-                dest.Properties[item.Key] = item.Value;
-            }
-
-            // Add the middleware entries
-            foreach (var ds in sourceComponents)
-            {
-                destComponents.Add(ds);
-            }
-
-            // Add the endpoint middleware
-            if (hasRoutesWithoutRouteMiddleware)
-            {
-                dest.UseEndpoints(e => { });
-            }
-        }
-
-        private static IList<Func<RequestDelegate, RequestDelegate>> GetComponentList(ApplicationBuilder application)
-        {
-            // HACK: We need to get the list of middleware from the application builder so it can be mutated
-            return (IList<Func<RequestDelegate, RequestDelegate>>)typeof(ApplicationBuilder)
-                    .GetField("_components", BindingFlags.NonPublic | BindingFlags.Instance)
-                    .GetValue(application);
         }
 
         IHost IHostBuilder.Build()
