@@ -20,7 +20,7 @@ class Program
     {
         var builder = WebApplicationHost.CreateDefaultBuilder(args);
 
-        builder.UseUrls("http://localhost:3000");
+        builder.Listen("http://localhost:3000");
 
         var app = builder.Build();
 
@@ -56,7 +56,7 @@ class Program
     {
         var builder = WebApplicationHost.CreateDefaultBuilder(args);
         
-        builder.UseUrls("http://localhost:3000");
+        builder.Listen("http://localhost:3000");
 
         builder.Services.AddControllers();
 
@@ -92,7 +92,7 @@ class Program
     {
         var builder = WebApplicationHost.CreateDefaultBuilder(args);
         
-        builder.UseUrls("http://localhost:3000");
+        builder.Listen("http://localhost:3000");
 
         builder.Services.AddCarter();
 
@@ -125,7 +125,7 @@ class Program
     {
         var builder = WebApplicationHost.CreateDefaultBuilder(args);
         
-        builder.UseUrls("http://localhost:3000");
+        builder.Listen("http://localhost:3000");
 
         builder.Services.AddSignalR();
 
@@ -165,7 +165,7 @@ class Program
     {
         var builder = WebApplicationHost.CreateDefaultBuilder(args);
         
-        builder.UseUrls("https://localhost:3000");
+        builder.Listen("https://localhost:3000");
 
         builder.Services.AddGrpc();
 
@@ -210,7 +210,7 @@ class Program
 
         builder.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 
-        builder.UseUrls("http://localhost:3000");
+        builder.Listen("http://localhost:3000");
 
         var app = builder.Build();
 
