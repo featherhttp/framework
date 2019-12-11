@@ -70,41 +70,56 @@ namespace Microsoft.AspNetCore.Builder
                     // The endpoints were already added on the outside
                     if (sourcePipeline.DataSources.Count > 0)
                     {
-                        // The user did not register the routing middleware
+                        // The user did not register the routing middleware so wrap the entire
+                        // destination pipeline in UseRouting() and UseEndpoints(), essentially:
+                        // destination.UseRouting()
+                        // destination.Run(source)
+                        // destination.UseEndpoints()
                         if (sourcePipeline.RouteBuilder == null)
                         {
-                            // Add the routing middleware first
                             destinationPipeline.UseRouting();
 
-                            // Copy the routes over
+                            // Copy the route data sources over to the destination pipeline, this should be available since we just called
+                            // UseRouting()
                             var routes = (IEndpointRouteBuilder)destinationPipeline.Properties[WebApplicationHost.EndpointRouteBuilder];
                             foreach (var ds in sourcePipeline.DataSources)
                             {
                                 routes.DataSources.Add(ds);
                             }
 
-                            // Chain the pipeline
+                            // Chain the execution of the source pipeline into the destination pipeline
                             destinationPipeline.Use(next =>
                             {
                                 sourcePipeline.Run(next);
                                 return sourcePipeline.Build();
                             });
 
+                            // Add a UseEndpoints at the end
                             destinationPipeline.UseEndpoints(e => { });
                         }
                         else
                         {
+                            // Since we register routes into the source pipeline's route builder directly,
+                            // if the user called UseRouting, we need to copy the data sources
                             foreach (var ds in sourcePipeline.DataSources)
                             {
                                 sourcePipeline.RouteBuilder.DataSources.Add(ds);
                             }
 
+                            // We then implicitly call UseEndpoints at the end of the pipeline
                             sourcePipeline.UseEndpoints(_ => { });
 
+                            // Wire the source pipeline to run in the destination pipeline
                             destinationPipeline.Run(sourcePipeline.Build());
                         }
                     }
+                    else
+                    {
+                        // Wire the source pipeline to run in the destination pipeline
+                        destinationPipeline.Run(sourcePipeline.Build());
+                    }
 
+                    // Copy the properties to the destination app builder
                     foreach (var item in sourcePipeline.Properties)
                     {
                         destinationPipeline.Properties[item.Key] = item.Value;
