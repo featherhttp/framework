@@ -20,9 +20,9 @@ class Program
     {
         var builder = WebApplicationHost.CreateDefaultBuilder(args);
 
-        builder.Listen("http://localhost:3000");
-
         var app = builder.Build();
+
+        app.Listen("http://localhost:3000");
 
         app.MapGet("/", async context =>
         {
@@ -56,11 +56,11 @@ class Program
     {
         var builder = WebApplicationHost.CreateDefaultBuilder(args);
         
-        builder.Listen("http://localhost:3000");
-
         builder.Services.AddControllers();
-
+        
         var app = builder.Build();
+
+        app.Listen("http://localhost:3000");
 
         app.MapControllers();
         
@@ -91,12 +91,12 @@ class Program
     static async Task Main(string[] args)
     {
         var builder = WebApplicationHost.CreateDefaultBuilder(args);
-        
-        builder.Listen("http://localhost:3000");
 
         builder.Services.AddCarter();
 
         var app = builder.Build();
+
+        app.Listen("http://localhost:3000");
 
         app.MapCarter();
 
@@ -125,11 +125,11 @@ class Program
     {
         var builder = WebApplicationHost.CreateDefaultBuilder(args);
         
-        builder.Listen("http://localhost:3000");
-
         builder.Services.AddSignalR();
 
         var app = builder.Build();
+        
+        app.Listen("http://localhost:3000");
 
         app.MapHub<Chat>("/chat");
         
@@ -164,12 +164,12 @@ class Program
     static async Task Main(string[] args)
     {
         var builder = WebApplicationHost.CreateDefaultBuilder(args);
-        
-        builder.Listen("https://localhost:3000");
-
+       
         builder.Services.AddGrpc();
 
-        var host = builder.Build();
+        var app = builder.Build();
+        
+        app.Listen("https://localhost:3000");
 
         app.MapGrpcService<GreeterService>();
         
@@ -210,10 +210,10 @@ class Program
 
         builder.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 
-        builder.Listen("http://localhost:3000");
-
         var app = builder.Build();
-
+        
+        app.Listen("http://localhost:3000");
+        
         if (app.Environment.IsDevelopment())
         {
             app.UseDeveloperExceptionPage();
