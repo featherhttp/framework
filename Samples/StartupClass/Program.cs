@@ -1,5 +1,4 @@
-﻿using FeatherHttp;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,7 +18,7 @@ class Program
     {
         var builder = WebApplicationHost.CreateDefaultBuilder(args);
 
-        builder.UseUrls("http://localhost:3000");
+        builder.Listen("http://localhost:3000");
 
         var startup = new Startup();
         startup.ConfigureServices(builder.Services);

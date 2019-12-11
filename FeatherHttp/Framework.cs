@@ -17,7 +17,7 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace FeatherHttp
+namespace Microsoft.AspNetCore.Builder
 {
     public class WebApplicationHostBuilder : IHostBuilder
     {
@@ -146,7 +146,7 @@ namespace FeatherHttp
             return sourcePipeline = new WebApplicationHost(host);
         }
 
-        public void UseUrls(params string[] urls)
+        public void Listen(params string[] urls)
         {
             _urls = urls;
         }

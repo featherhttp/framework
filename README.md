@@ -9,7 +9,6 @@ A super lightweight low ceremony APIs for ASP.NET Core applications.
 ### Hello World
 
 ```C#
-using FeatherHttp;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Hosting;
@@ -39,7 +38,6 @@ class Program
 
 
 ```C#
-using FeatherHttp;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Hosting;
@@ -74,7 +72,6 @@ class Program
 ### Carter
 
 ```C#
-using FeatherHttp;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -111,7 +108,6 @@ class Program
 ### SignalR
 
 ```C#
-using FeatherHttp;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Hosting;
@@ -145,7 +141,6 @@ class Program
 ### GRPC
 
 ```C#
-using FeatherHttp;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Hosting;
@@ -192,7 +187,6 @@ class Program
 ```C#
 using System.Threading.Tasks;
 using Autofac.Extensions.DependencyInjection;
-using FeatherHttp;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;

@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
 using Autofac.Extensions.DependencyInjection;
-using FeatherHttp;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
@@ -24,7 +23,7 @@ class Program
 
         builder.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 
-        builder.UseUrls("http://localhost:3000");
+        builder.Listen("http://localhost:3000");
 
         var app = builder.Build();
 
