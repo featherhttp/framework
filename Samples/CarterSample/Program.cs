@@ -18,11 +18,11 @@ class Program
     {
         var builder = WebApplicationHost.CreateDefaultBuilder(args);
 
-        builder.Listen("http://localhost:3000");
-
         builder.Services.AddCarter();
 
         var app = builder.Build();
+
+        app.Listen("http://localhost:3000");
 
         app.MapCarter();
 

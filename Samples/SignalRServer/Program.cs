@@ -15,11 +15,11 @@ class Program
     {
         var builder = WebApplicationHost.CreateDefaultBuilder(args);
 
-        builder.Listen("http://localhost:3000");
-
         builder.Services.AddSignalR();
 
         var app = builder.Build();
+        
+        app.Listen("http://localhost:3000");
 
         app.MapHub<Chat>("/chat");
 

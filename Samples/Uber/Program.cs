@@ -23,9 +23,9 @@ class Program
 
         builder.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 
-        builder.Listen("http://localhost:3000");
-
         var app = builder.Build();
+
+        app.Listen("http://localhost:3000");
 
         if (app.Environment.IsDevelopment())
         {

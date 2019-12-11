@@ -10,9 +10,9 @@ class Program
     {
         var builder = WebApplicationHost.CreateDefaultBuilder(args);
 
-        builder.Listen("http://localhost:4000");
-
         var app = builder.Build();
+
+        app.Listen("http://localhost:3000");
 
         app.MapGet("/", async context =>
         {

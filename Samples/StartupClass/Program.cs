@@ -18,12 +18,12 @@ class Program
     {
         var builder = WebApplicationHost.CreateDefaultBuilder(args);
 
-        builder.Listen("http://localhost:3000");
-
         var startup = new Startup();
         startup.ConfigureServices(builder.Services);
 
         var app = builder.Build();
+
+        app.Listen("http://localhost:3000");
 
         startup.Configure(app, app, app.Environment);
 

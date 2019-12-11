@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Hosting.Server;
+using Microsoft.AspNetCore.Hosting.Server.Features;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Routing;
@@ -22,7 +23,6 @@ namespace Microsoft.AspNetCore.Builder
     public class WebApplicationHostBuilder : IHostBuilder
     {
         private readonly IHostBuilder _hostBuilder;
-        private string[] _urls;
 
         public WebApplicationHostBuilder() : this(new HostBuilder())
         {
@@ -65,11 +65,6 @@ namespace Microsoft.AspNetCore.Builder
 
             _hostBuilder.ConfigureWebHostDefaults(web =>
             {
-                if (_urls != null)
-                {
-                    web.UseUrls(_urls);
-                }
-
                 web.Configure(destinationPipeline =>
                 {
                     // The endpoints were already added on the outside
@@ -144,11 +139,6 @@ namespace Microsoft.AspNetCore.Builder
             var host = _hostBuilder.Build();
 
             return sourcePipeline = new WebApplicationHost(host);
-        }
-
-        public void Listen(params string[] urls)
-        {
-            _urls = urls;
         }
 
         IHost IHostBuilder.Build()
@@ -261,6 +251,16 @@ namespace Microsoft.AspNetCore.Builder
         internal ApplicationBuilder ApplicationBuilder { get; }
 
         public IServiceProvider ServiceProvider => Services;
+
+        public void Listen(params string[] urls)
+        {
+            var addresses = ServerFeatures.Get<IServerAddressesFeature>().Addresses;
+            addresses.Clear();
+            foreach (var u in urls)
+            {
+                addresses.Add(u);
+            }
+        }
 
         public static WebApplicationHostBuilder CreateDefaultBuilder(string[] args)
         {
