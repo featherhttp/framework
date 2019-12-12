@@ -22,8 +22,6 @@ class Program
 
         var app = builder.Build();
 
-        app.Listen("http://localhost:3000");
-
         app.MapGet("/", async context =>
         {
             await context.Response.WriteAsync("Hello World");
@@ -60,8 +58,6 @@ class Program
         
         var app = builder.Build();
 
-        app.Listen("http://localhost:3000");
-
         app.MapControllers();
         
         await app.RunAsync();
@@ -96,8 +92,6 @@ class Program
 
         var app = builder.Build();
 
-        app.Listen("http://localhost:3000");
-
         app.MapCarter();
 
         await app.RunAsync();
@@ -129,8 +123,6 @@ class Program
 
         var app = builder.Build();
         
-        app.Listen("http://localhost:3000");
-
         app.MapHub<Chat>("/chat");
         
         await app.RunAsync();

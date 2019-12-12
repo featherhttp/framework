@@ -12,8 +12,6 @@ class Program
 
         var app = builder.Build();
 
-        app.Listen("http://localhost:3000");
-
         app.MapGet("/", async context =>
         {
             await context.Response.WriteAsync("Hello World");

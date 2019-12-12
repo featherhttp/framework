@@ -20,8 +20,6 @@ class Program
 
         var app = builder.Build();
 
-        app.Listen("http://localhost:3000");
-
         app.MapControllers();
 
         await app.RunAsync();

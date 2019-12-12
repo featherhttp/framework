@@ -23,8 +23,6 @@ class Program
 
         var app = builder.Build();
 
-        app.Listen("http://localhost:3000");
-
         startup.Configure(app, app, app.Environment);
 
         await app.RunAsync();

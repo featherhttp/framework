@@ -19,8 +19,6 @@ class Program
 
         var app = builder.Build();
         
-        app.Listen("http://localhost:3000");
-
         app.MapHub<Chat>("/chat");
 
         await app.RunAsync();
