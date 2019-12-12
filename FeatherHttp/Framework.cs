@@ -23,7 +23,8 @@ namespace Microsoft.AspNetCore.Builder
     public class WebApplicationHostBuilder : IHostBuilder
     {
         private readonly IHostBuilder _hostBuilder;
-
+        private readonly WebHostBuilder _webHostBuilder;
+        
         public WebApplicationHostBuilder() : this(new HostBuilder())
         {
 
@@ -45,6 +46,7 @@ namespace Microsoft.AspNetCore.Builder
             Configuration = new ConfigurationBuilder().SetBasePath(Environment.ContentRootPath);
             HostConfiguration = new ConfigurationBuilder().SetBasePath(Environment.ContentRootPath);
             Logging = new LoggingBuilder(Services);
+            Http = _webHostBuilder = new WebHostBuilder();
         }
 
         public IWebHostEnvironment Environment { get; }
@@ -57,6 +59,8 @@ namespace Microsoft.AspNetCore.Builder
 
         public ILoggingBuilder Logging { get; }
 
+        public IWebHostBuilder Http { get; }
+
         public IDictionary<object, object> Properties => _hostBuilder.Properties;
 
         public WebApplicationHost Build()
@@ -65,6 +69,8 @@ namespace Microsoft.AspNetCore.Builder
 
             _hostBuilder.ConfigureWebHostDefaults(web =>
             {
+                _webHostBuilder.ExecuteActions(web);
+                
                 web.Configure(destinationPipeline =>
                 {
                     // The endpoints were already added on the outside
@@ -189,6 +195,52 @@ namespace Microsoft.AspNetCore.Builder
         public IHostBuilder UseServiceProviderFactory<TContainerBuilder>(Func<HostBuilderContext, IServiceProviderFactory<TContainerBuilder>> factory)
         {
             return _hostBuilder.UseServiceProviderFactory(factory);
+        }
+
+        private class WebHostBuilder : IWebHostBuilder
+        {
+            private Dictionary<string, string> _settings = new Dictionary<string, string>();
+            private Action<IWebHostBuilder> _operations;
+
+            IWebHost IWebHostBuilder.Build()
+            {
+                return null;
+            }
+
+            public IWebHostBuilder ConfigureAppConfiguration(Action<WebHostBuilderContext, IConfigurationBuilder> configureDelegate)
+            {
+                _operations += b => b.ConfigureAppConfiguration(configureDelegate);
+                return this;
+            }
+
+            public IWebHostBuilder ConfigureServices(Action<WebHostBuilderContext, IServiceCollection> configureServices)
+            {
+                _operations += b => b.ConfigureServices(configureServices);
+                return this;
+            }
+
+            public IWebHostBuilder ConfigureServices(Action<IServiceCollection> configureServices)
+            {
+                return ConfigureServices((WebHostBuilderContext context, IServiceCollection services) => configureServices(services));
+            }
+
+            public string GetSetting(string key)
+            {
+                _settings.TryGetValue(key, out var value);
+                return value;
+            }
+
+            public IWebHostBuilder UseSetting(string key, string value)
+            {
+                _operations += b => b.UseSetting(key, value);
+                _settings[key] = value;
+                return this;
+            }
+
+            public void ExecuteActions(IWebHostBuilder webHostBuilder)
+            {
+                _operations?.Invoke(webHostBuilder);
+            }
         }
 
         private class LoggingBuilder : ILoggingBuilder
