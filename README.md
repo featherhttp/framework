@@ -1,6 +1,6 @@
 ## Feather HTTP
 
-A super lightweight low ceremony APIs for ASP.NET Core applications.
+A lightweight low ceremony APIs for ASP.NET Core applications.
 
 - Built on the same primitives as ASP.NET Core
 - Optimized for building HTTP APIs quickly
