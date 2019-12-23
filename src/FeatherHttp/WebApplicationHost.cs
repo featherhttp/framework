@@ -71,6 +71,11 @@ namespace Microsoft.AspNetCore.Builder
             }
         }
 
+        public static WebApplicationHostBuilder CreateDefaultBuilder()
+        {
+            return new WebApplicationHostBuilder(Host.CreateDefaultBuilder());
+        }
+
         public static WebApplicationHostBuilder CreateDefaultBuilder(string[] args)
         {
             return new WebApplicationHostBuilder(Host.CreateDefaultBuilder(args));
