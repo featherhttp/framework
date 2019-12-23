@@ -9,11 +9,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{02BC
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HelloWorld", "samples\HelloWorld\HelloWorld.csproj", "{28E48980-500A-4365-8CDE-6E674A78B9BD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AspNetControllers", "Samples\AspNetControllers\AspNetControllers.csproj", "{9F2057D9-4DB4-4CAA-B2A4-3F43676599B2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AspNetControllers", "samples\AspNetControllers\AspNetControllers.csproj", "{9F2057D9-4DB4-4CAA-B2A4-3F43676599B2}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CarterSample", "samples\CarterSample\CarterSample.csproj", "{B2AEC5FA-A230-4D60-A590-EBED143B171F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SignalRServer", "Samples\SignalRServer\SignalRServer.csproj", "{F8F75378-9497-4238-93D6-47AA7D6014F5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SignalRServer", "samples\SignalRServer\SignalRServer.csproj", "{F8F75378-9497-4238-93D6-47AA7D6014F5}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SignalRClient", "samples\SignalRClient\SignalRClient.csproj", "{3CFFFEB1-0560-4055-89E8-49610A2E6495}"
 EndProject
