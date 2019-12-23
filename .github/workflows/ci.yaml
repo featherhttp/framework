@@ -32,8 +32,8 @@ jobs:
 
     - name: add package repository
       if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-      run: nuget source Add -Config nuget.config -Name github -Source https://nuget.pkg.github.com/davidfowl/index.json -UserName davidfowl -Password ${{ secrets.GITHUB_TOKEN }} -StorePasswordInClearText
+      run: nuget setapikey ${{ secrets.FEEDZ_TOKEN }} -Config nuget.config -Source https://f.feedz.io/davidfowl/featherhttp/nuget/index.json
 
     - name: push packages
       if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-      run: dotnet nuget push **/*.nupkg -s github --skip-duplicate
+      run: dotnet nuget push **/*.nupkg -s https://f.feedz.io/davidfowl/featherhttp/nuget/index.json --skip-duplicate
