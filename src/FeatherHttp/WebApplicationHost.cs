@@ -18,7 +18,7 @@ namespace Microsoft.AspNetCore.Builder
 {
     public class WebApplicationHost : IHost, IApplicationBuilder, IEndpointRouteBuilder
     {
-        public const string EndpointRouteBuilder = "__EndpointRouteBuilder";
+        internal const string EndpointRouteBuilder = "__EndpointRouteBuilder";
 
         private readonly IHost _host;
         private readonly List<EndpointDataSource> _dataSources = new List<EndpointDataSource>();
