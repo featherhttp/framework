@@ -4,11 +4,17 @@
     <WarnOnPackingNonPackableProject>false</WarnOnPackingNonPackableProject>
     <NoWarn>$(NoWarn);NU5105</NoWarn>
     <RepositoryUrl>https://github.com/davidfowl/FeatherHttp</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/davidfowl/FeatherHttp</PackageProjectUrl>
+    <PackageReleaseNotes>https://github.com/davidfowl/FeatherHttp/releases</PackageReleaseNotes>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>cloud API REST microservice web</PackageTags>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Nerdbank.GitVersioning">
       <Version>3.0.28</Version>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All"/>
   </ItemGroup>
 </Project>
