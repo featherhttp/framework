@@ -36,4 +36,4 @@ jobs:
 
     - name: push packages
       if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-      run: dotnet nuget push **/*.nupkg -s https://nuget.pkg.github.com/davidfowl/index.json --skip-duplicate
+      run: dotnet nuget push **/*.nupkg -s github --skip-duplicate
