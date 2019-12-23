@@ -6,7 +6,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\FeatherHttp\FeatherHttp.csproj" />
+    <PackageReference Include="Carter" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\FeatherHttp\FeatherHttp.csproj" />
   </ItemGroup>
 
 </Project>

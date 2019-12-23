@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\FeatherHttp\FeatherHttp.csproj" />
+    <ProjectReference Include="..\..\src\FeatherHttp\FeatherHttp.csproj" />
   </ItemGroup>
 
   <ItemGroup>
