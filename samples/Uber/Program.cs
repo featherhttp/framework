@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -22,6 +23,11 @@ class Program
         builder.UseSerilog();
 
         builder.UseServiceProviderFactory(new AutofacServiceProviderFactory());
+
+        builder.ConfigureContainer<ContainerBuilder>(b =>
+        {
+            // Register services using Autofac specific methods here
+        });
 
         var app = builder.Build();
 
