@@ -20,12 +20,15 @@ namespace Microsoft.AspNetCore.Builder
         private readonly IHostBuilder _hostBuilder;
         private readonly WebHostBuilder _webHostBuilder;
 
+        /// <summary>
+        /// Creates a <see cref="WebApplicationHostBuilder"/>.
+        /// </summary>
         public WebApplicationHostBuilder() : this(new HostBuilder())
         {
 
         }
 
-        public WebApplicationHostBuilder(IHostBuilder hostBuilder)
+        internal WebApplicationHostBuilder(IHostBuilder hostBuilder)
         {
             _hostBuilder = hostBuilder;
 
