@@ -197,6 +197,21 @@ namespace Microsoft.AspNetCore.Builder
             return this;
         }
 
+        /// <summary>
+        /// Overrides the factory used to create the service provider and registers the delegate for the custom setup of the container.
+        /// <typeparam name="TContainerBuilder">The type of builder provided by the container.</typeparam>
+        /// </summary>
+        /// <param name="factory">The custom service-provider factory implementing <see cref="IServiceProviderFactory{TContainerBuilder}"/>></param>
+        /// <param name="configureAction">The action to setup the custom container./></param>
+        /// <returns>The same instance of the Microsoft.Extensions.Hosting.IHostBuilder for chaining.</returns>
+        public IHostBuilder UseServiceProviderFactory<TContainerBuilder>(IServiceProviderFactory<TContainerBuilder> factory, Action<TContainerBuilder> configureAction)
+        {
+            _hostBuilder.UseServiceProviderFactory(factory)
+                .ConfigureContainer(configureAction);
+
+            return this;
+        }
+
         IHostBuilder IHostBuilder.UseServiceProviderFactory<TContainerBuilder>(Func<HostBuilderContext, IServiceProviderFactory<TContainerBuilder>> factory)
         {
             _hostBuilder.UseServiceProviderFactory(factory);
