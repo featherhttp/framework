@@ -5,6 +5,7 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <PackageDescription>A lightweight low ceremony API for ASP.NET Core services.</PackageDescription>
     <Authors>David Fowler</Authors>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

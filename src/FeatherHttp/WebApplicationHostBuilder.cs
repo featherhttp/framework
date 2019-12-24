@@ -1,9 +1,7 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
@@ -14,11 +12,14 @@ using Microsoft.Extensions.Logging;
 
 namespace Microsoft.AspNetCore.Builder
 {
+    /// <summary>
+    /// A builder for web applications and services.
+    /// </summary>
     public class WebApplicationHostBuilder : IHostBuilder
     {
         private readonly IHostBuilder _hostBuilder;
         private readonly WebHostBuilder _webHostBuilder;
-        
+
         public WebApplicationHostBuilder() : this(new HostBuilder())
         {
 
@@ -43,20 +44,45 @@ namespace Microsoft.AspNetCore.Builder
             Http = _webHostBuilder = new WebHostBuilder();
         }
 
+        /// <summary>
+        /// Provides information about the web hosting environment an application is running.
+        /// </summary>
         public IWebHostEnvironment Environment { get; }
 
+        /// <summary>
+        /// A collection of services for the application to compose. This is useful for adding user provided or framework provided services.
+        /// </summary>
         public IServiceCollection Services { get; }
 
+        /// <summary>
+        /// A collection of configuration providers for the application to compose. This is useful for adding new configuration sources and providers.
+        /// </summary>
         public IConfigurationBuilder Configuration { get; }
 
+        /// <summary>
+        /// A collection of configuration providers for the host to compose. This is a more advanced settings since there are only some settings that apply to the host.
+        /// </summary>
         public IConfigurationBuilder HostConfiguration { get; }
 
+        /// <summary>
+        /// A collection of logging providers for the applicaiton to compose. This is useful for adding new logging providers.
+        /// </summary>
         public ILoggingBuilder Logging { get; }
 
+        /// <summary>
+        /// A builder for configuring web specific properties. 
+        /// </summary>
         public IWebHostBuilder Http { get; }
 
+        /// <summary>
+        /// A central location for sharing state between components during the host building process.
+        /// </summary>
         public IDictionary<object, object> Properties => _hostBuilder.Properties;
 
+        /// <summary>
+        /// Builds the <see cref="WebApplicationHost"/>.
+        /// </summary>
+        /// <returns>A configured <see cref="WebApplicationHost"/>.</returns>
         public WebApplicationHost Build()
         {
             WebApplicationHost sourcePipeline = null;
@@ -64,7 +90,7 @@ namespace Microsoft.AspNetCore.Builder
             _hostBuilder.ConfigureWebHostDefaults(web =>
             {
                 _webHostBuilder.ExecuteActions(web);
-                
+
                 web.Configure(destinationPipeline =>
                 {
                     // The endpoints were already added on the outside
@@ -156,39 +182,51 @@ namespace Microsoft.AspNetCore.Builder
             return sourcePipeline = new WebApplicationHost(host);
         }
 
+        /// <summary>
+        /// Overrides the factory used to create the service provider.
+        /// </summary>
+        /// <typeparam name="TContainerBuilder">The type of builder provided by the container.</typeparam>
+        /// <param name="factory"></param>
+        /// <returns>The same instance of the Microsoft.Extensions.Hosting.IHostBuilder for chaining.</returns>
+        public IHostBuilder UseServiceProviderFactory<TContainerBuilder>(IServiceProviderFactory<TContainerBuilder> factory)
+        {
+            _hostBuilder.UseServiceProviderFactory(factory);
+            return this;
+        }
+
+        IHostBuilder IHostBuilder.UseServiceProviderFactory<TContainerBuilder>(Func<HostBuilderContext, IServiceProviderFactory<TContainerBuilder>> factory)
+        {
+            _hostBuilder.UseServiceProviderFactory(factory);
+            return this;
+        }
+
         IHost IHostBuilder.Build()
         {
             return _hostBuilder.Build();
         }
 
-        public IHostBuilder ConfigureAppConfiguration(Action<HostBuilderContext, IConfigurationBuilder> configureDelegate)
+        IHostBuilder IHostBuilder.ConfigureAppConfiguration(Action<HostBuilderContext, IConfigurationBuilder> configureDelegate)
         {
-            return _hostBuilder.ConfigureAppConfiguration(configureDelegate);
+            _hostBuilder.ConfigureAppConfiguration(configureDelegate);
+            return this;
         }
 
-        public IHostBuilder ConfigureContainer<TContainerBuilder>(Action<HostBuilderContext, TContainerBuilder> configureDelegate)
+        IHostBuilder IHostBuilder.ConfigureContainer<TContainerBuilder>(Action<HostBuilderContext, TContainerBuilder> configureDelegate)
         {
-            return _hostBuilder.ConfigureContainer(configureDelegate);
+            _hostBuilder.ConfigureContainer(configureDelegate);
+            return this;
         }
 
-        public IHostBuilder ConfigureHostConfiguration(Action<IConfigurationBuilder> configureDelegate)
+        IHostBuilder IHostBuilder.ConfigureHostConfiguration(Action<IConfigurationBuilder> configureDelegate)
         {
-            return _hostBuilder.ConfigureHostConfiguration(configureDelegate);
+            _hostBuilder.ConfigureHostConfiguration(configureDelegate);
+            return this;
         }
 
-        public IHostBuilder ConfigureServices(Action<HostBuilderContext, IServiceCollection> configureDelegate)
+        IHostBuilder IHostBuilder.ConfigureServices(Action<HostBuilderContext, IServiceCollection> configureDelegate)
         {
-            return _hostBuilder.ConfigureServices(configureDelegate);
-        }
-
-        public IHostBuilder UseServiceProviderFactory<TContainerBuilder>(IServiceProviderFactory<TContainerBuilder> factory)
-        {
-            return _hostBuilder.UseServiceProviderFactory(factory);
-        }
-
-        public IHostBuilder UseServiceProviderFactory<TContainerBuilder>(Func<HostBuilderContext, IServiceProviderFactory<TContainerBuilder>> factory)
-        {
-            return _hostBuilder.UseServiceProviderFactory(factory);
+            _hostBuilder.ConfigureServices(configureDelegate);
+            return this;
         }
 
         private class WebHostBuilder : IWebHostBuilder
