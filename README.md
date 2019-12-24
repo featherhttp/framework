@@ -192,16 +192,17 @@ class Program
 {
     static async Task Main(string[] args)
     {
-        Log.Logger = new LoggerConfiguration()
-            .Enrich.FromLogContext()
-            .WriteTo.Console()
-            .CreateLogger();
-
         var builder = WebApplicationHost.CreateDefaultBuilder(args);
 
         builder.Configuration.AddYamlFile("appsettings.yml", optional: true);
 
-        builder.UseSerilog();
+        builder.UseSerilog((context, configuration) 
+            => configuration
+                .Enrich
+                .FromLogContext()
+                .WriteTo
+                .Console()
+            );
 
         builder.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 
