@@ -19,14 +19,14 @@ namespace Microsoft.AspNetCore.Builder
     /// <summary>
     /// The web application used to configure the http pipeline, and routes.
     /// </summary>
-    public class WebApplicationHost : IHost, IApplicationBuilder, IEndpointRouteBuilder
+    public class WebApplication : IHost, IApplicationBuilder, IEndpointRouteBuilder
     {
         internal const string EndpointRouteBuilder = "__EndpointRouteBuilder";
 
         private readonly IHost _host;
         private readonly List<EndpointDataSource> _dataSources = new List<EndpointDataSource>();
 
-        internal WebApplicationHost(IHost host)
+        internal WebApplication(IHost host)
         {
             _host = host;
             ApplicationBuilder = new ApplicationBuilder(host.Services);
@@ -99,22 +99,22 @@ namespace Microsoft.AspNetCore.Builder
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="WebApplicationHostBuilder"/> class with pre-configured defaults.
+        /// Initializes a new instance of the <see cref="WebApplicationBuilder"/> class with pre-configured defaults.
         /// </summary>
         /// <returns></returns>
-        public static WebApplicationHostBuilder CreateDefaultBuilder()
+        public static WebApplicationBuilder CreateDefaultBuilder()
         {
-            return new WebApplicationHostBuilder(Host.CreateDefaultBuilder());
+            return new WebApplicationBuilder(Host.CreateDefaultBuilder());
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="WebApplicationHostBuilder"/> class with pre-configured defaults.
+        /// Initializes a new instance of the <see cref="WebApplicationBuilder"/> class with pre-configured defaults.
         /// </summary>
         /// <param name="args">Command line arguments</param>
         /// <returns></returns>
-        public static WebApplicationHostBuilder CreateDefaultBuilder(string[] args)
+        public static WebApplicationBuilder CreateDefaultBuilder(string[] args)
         {
-            return new WebApplicationHostBuilder(Host.CreateDefaultBuilder(args));
+            return new WebApplicationBuilder(Host.CreateDefaultBuilder(args));
         }
 
         /// <summary>

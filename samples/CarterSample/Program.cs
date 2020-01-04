@@ -16,7 +16,7 @@ class Program
 {
     static async Task Main(string[] args)
     {
-        var builder = WebApplicationHost.CreateDefaultBuilder(args);
+        var builder = WebApplication.CreateDefaultBuilder(args);
 
         builder.Services.AddCarter();
 

@@ -15,20 +15,20 @@ namespace Microsoft.AspNetCore.Builder
     /// <summary>
     /// A builder for web applications and services.
     /// </summary>
-    public class WebApplicationHostBuilder
+    public class WebApplicationBuilder
     {
         private readonly IHostBuilder _hostBuilder;
         private readonly WebHostBuilder _webHostBuilder;
 
         /// <summary>
-        /// Creates a <see cref="WebApplicationHostBuilder"/>.
+        /// Creates a <see cref="WebApplicationBuilder"/>.
         /// </summary>
-        public WebApplicationHostBuilder() : this(new HostBuilder())
+        public WebApplicationBuilder() : this(new HostBuilder())
         {
 
         }
 
-        internal WebApplicationHostBuilder(IHostBuilder hostBuilder)
+        internal WebApplicationBuilder(IHostBuilder hostBuilder)
         {
             _hostBuilder = hostBuilder;
 
@@ -44,7 +44,7 @@ namespace Microsoft.AspNetCore.Builder
             Configuration = new ConfigurationBuilder().SetBasePath(Environment.ContentRootPath);
             HostConfiguration = new ConfigurationBuilder().SetBasePath(Environment.ContentRootPath);
             Logging = new LoggingBuilder(Services);
-            Http = _webHostBuilder = new WebHostBuilder();
+            Server = _webHostBuilder = new WebHostBuilder();
             Host = _hostBuilder;
         }
 
@@ -76,7 +76,7 @@ namespace Microsoft.AspNetCore.Builder
         /// <summary>
         /// A builder for configuring web specific properties. 
         /// </summary>
-        public IWebHostBuilder Http { get; }
+        public IWebHostBuilder Server { get; }
 
         /// <summary>
         /// A builder for configure host specific properties.
@@ -89,12 +89,12 @@ namespace Microsoft.AspNetCore.Builder
         public IDictionary<object, object> Properties => _hostBuilder.Properties;
 
         /// <summary>
-        /// Builds the <see cref="WebApplicationHost"/>.
+        /// Builds the <see cref="WebApplication"/>.
         /// </summary>
-        /// <returns>A configured <see cref="WebApplicationHost"/>.</returns>
-        public WebApplicationHost Build()
+        /// <returns>A configured <see cref="WebApplication"/>.</returns>
+        public WebApplication Build()
         {
-            WebApplicationHost sourcePipeline = null;
+            WebApplication sourcePipeline = null;
 
             _hostBuilder.ConfigureWebHostDefaults(web =>
             {
@@ -116,7 +116,7 @@ namespace Microsoft.AspNetCore.Builder
 
                             // Copy the route data sources over to the destination pipeline, this should be available since we just called
                             // UseRouting()
-                            var routes = (IEndpointRouteBuilder)destinationPipeline.Properties[WebApplicationHost.EndpointRouteBuilder];
+                            var routes = (IEndpointRouteBuilder)destinationPipeline.Properties[WebApplication.EndpointRouteBuilder];
                             foreach (var ds in sourcePipeline.DataSources)
                             {
                                 routes.DataSources.Add(ds);
@@ -188,7 +188,7 @@ namespace Microsoft.AspNetCore.Builder
 
             var host = _hostBuilder.Build();
 
-            return sourcePipeline = new WebApplicationHost(host);
+            return sourcePipeline = new WebApplication(host);
         }
 
         private class WebHostBuilder : IWebHostBuilder
