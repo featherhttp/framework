@@ -20,7 +20,7 @@ class Program
 {
     static async Task Main(string[] args)
     {
-        var builder = WebApplicationHost.CreateDefaultBuilder(args);
+        var builder = WebApplication.CreateDefaultBuilder(args);
 
         var app = builder.Build();
 
@@ -54,7 +54,7 @@ class Program
 {
     static async Task Main(string[] args)
     {
-        var builder = WebApplicationHost.CreateDefaultBuilder(args);
+        var builder = WebApplication.CreateDefaultBuilder(args);
         
         builder.Services.AddControllers();
         
@@ -88,7 +88,7 @@ class Program
 {
     static async Task Main(string[] args)
     {
-        var builder = WebApplicationHost.CreateDefaultBuilder(args);
+        var builder = WebApplication.CreateDefaultBuilder(args);
 
         builder.Services.AddCarter();
 
@@ -119,7 +119,7 @@ class Program
 {
     static async Task Main(string[] args)
     {
-        var builder = WebApplicationHost.CreateDefaultBuilder(args);
+        var builder = WebApplication.CreateDefaultBuilder(args);
         
         builder.Services.AddSignalR();
 
@@ -157,7 +157,7 @@ class Program
 {
     static async Task Main(string[] args)
     {
-        var builder = WebApplicationHost.CreateDefaultBuilder(args);
+        var builder = WebApplication.CreateDefaultBuilder(args);
        
         builder.Services.AddGrpc();
 
@@ -192,11 +192,11 @@ class Program
 {
     static async Task Main(string[] args)
     {
-        var builder = WebApplicationHost.CreateDefaultBuilder(args);
+        var builder = WebApplication.CreateDefaultBuilder(args);
 
         builder.Configuration.AddYamlFile("appsettings.yml", optional: true);
 
-        builder.UseSerilog((context, configuration) 
+        builder.Host.UseSerilog((context, configuration) 
             => configuration
                 .Enrich
                 .FromLogContext()
@@ -204,9 +204,9 @@ class Program
                 .Console()
             );
 
-        builder.UseServiceProviderFactory(new AutofacServiceProviderFactory());
+        builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 
-        builder.ConfigureContainer<ContainerBuilder>(b =>
+        builder.Host.ConfigureContainer<ContainerBuilder>(b =>
         {
             // Register services using Autofac specific methods here
         });
@@ -220,6 +220,7 @@ class Program
             app.UseDeveloperExceptionPage();
         }
 
+        // Be explicit about the routing middleware
         app.UseRouting();
 
         app.MapGet("/", async context =>
