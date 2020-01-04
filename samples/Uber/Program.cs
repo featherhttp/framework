@@ -11,7 +11,7 @@ class Program
 {
     static async Task Main(string[] args)
     {
-        var builder = WebApplication.CreateDefaultBuilder(args);
+        var builder = WebApplication.CreateBuilder(args);
 
         builder.Configuration.AddYamlFile("appsettings.yml", optional: true);
 

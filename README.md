@@ -20,7 +20,7 @@ class Program
 {
     static async Task Main(string[] args)
     {
-        var builder = WebApplication.CreateDefaultBuilder(args);
+        var builder = WebApplication.CreateBuilder(args);
 
         var app = builder.Build();
 
@@ -54,7 +54,7 @@ class Program
 {
     static async Task Main(string[] args)
     {
-        var builder = WebApplication.CreateDefaultBuilder(args);
+        var builder = WebApplication.CreateBuilder(args);
         
         builder.Services.AddControllers();
         
@@ -88,7 +88,7 @@ class Program
 {
     static async Task Main(string[] args)
     {
-        var builder = WebApplication.CreateDefaultBuilder(args);
+        var builder = WebApplication.CreateBuilder(args);
 
         builder.Services.AddCarter();
 
@@ -119,7 +119,7 @@ class Program
 {
     static async Task Main(string[] args)
     {
-        var builder = WebApplication.CreateDefaultBuilder(args);
+        var builder = WebApplication.CreateBuilder(args);
         
         builder.Services.AddSignalR();
 
@@ -157,7 +157,7 @@ class Program
 {
     static async Task Main(string[] args)
     {
-        var builder = WebApplication.CreateDefaultBuilder(args);
+        var builder = WebApplication.CreateBuilder(args);
        
         builder.Services.AddGrpc();
 
@@ -192,7 +192,7 @@ class Program
 {
     static async Task Main(string[] args)
     {
-        var builder = WebApplication.CreateDefaultBuilder(args);
+        var builder = WebApplication.CreateBuilder(args);
 
         builder.Configuration.AddYamlFile("appsettings.yml", optional: true);
 

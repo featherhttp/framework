@@ -102,7 +102,7 @@ namespace Microsoft.AspNetCore.Builder
         /// Initializes a new instance of the <see cref="WebApplicationBuilder"/> class with pre-configured defaults.
         /// </summary>
         /// <returns></returns>
-        public static WebApplicationBuilder CreateDefaultBuilder()
+        public static WebApplicationBuilder CreateBuilder()
         {
             return new WebApplicationBuilder(Host.CreateDefaultBuilder());
         }
@@ -112,7 +112,7 @@ namespace Microsoft.AspNetCore.Builder
         /// </summary>
         /// <param name="args">Command line arguments</param>
         /// <returns></returns>
-        public static WebApplicationBuilder CreateDefaultBuilder(string[] args)
+        public static WebApplicationBuilder CreateBuilder(string[] args)
         {
             return new WebApplicationBuilder(Host.CreateDefaultBuilder(args));
         }
@@ -140,7 +140,7 @@ namespace Microsoft.AspNetCore.Builder
         /// <summary>
         /// Disposes the application.
         /// </summary>
-        public void Dispose()
+        void IDisposable.Dispose()
         {
             _host.Dispose();
         }
