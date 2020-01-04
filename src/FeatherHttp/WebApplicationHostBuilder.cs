@@ -15,7 +15,7 @@ namespace Microsoft.AspNetCore.Builder
     /// <summary>
     /// A builder for web applications and services.
     /// </summary>
-    public class WebApplicationHostBuilder : IHostBuilder
+    public class WebApplicationHostBuilder
     {
         private readonly IHostBuilder _hostBuilder;
         private readonly WebHostBuilder _webHostBuilder;
@@ -45,6 +45,7 @@ namespace Microsoft.AspNetCore.Builder
             HostConfiguration = new ConfigurationBuilder().SetBasePath(Environment.ContentRootPath);
             Logging = new LoggingBuilder(Services);
             Http = _webHostBuilder = new WebHostBuilder();
+            Host = _hostBuilder;
         }
 
         /// <summary>
@@ -76,6 +77,11 @@ namespace Microsoft.AspNetCore.Builder
         /// A builder for configuring web specific properties. 
         /// </summary>
         public IWebHostBuilder Http { get; }
+
+        /// <summary>
+        /// A builder for configure host specific properties.
+        /// </summary>
+        public IHostBuilder Host { get; }
 
         /// <summary>
         /// A central location for sharing state between components during the host building process.
@@ -183,68 +189,6 @@ namespace Microsoft.AspNetCore.Builder
             var host = _hostBuilder.Build();
 
             return sourcePipeline = new WebApplicationHost(host);
-        }
-
-        /// <summary>
-        /// Overrides the factory used to create the service provider.
-        /// </summary>
-        /// <typeparam name="TContainerBuilder">The type of builder provided by the container.</typeparam>
-        /// <param name="factory"></param>
-        /// <returns>The same instance of the Microsoft.Extensions.Hosting.IHostBuilder for chaining.</returns>
-        public IHostBuilder UseServiceProviderFactory<TContainerBuilder>(IServiceProviderFactory<TContainerBuilder> factory)
-        {
-            _hostBuilder.UseServiceProviderFactory(factory);
-            return this;
-        }
-
-        /// <summary>
-        /// Overrides the factory used to create the service provider and registers the delegate for the custom setup of the container.
-        /// <typeparam name="TContainerBuilder">The type of builder provided by the container.</typeparam>
-        /// </summary>
-        /// <param name="factory">The custom service-provider factory implementing <see cref="IServiceProviderFactory{TContainerBuilder}"/>></param>
-        /// <param name="configureAction">The action to setup the custom container./></param>
-        /// <returns>The same instance of the Microsoft.Extensions.Hosting.IHostBuilder for chaining.</returns>
-        public IHostBuilder UseServiceProviderFactory<TContainerBuilder>(IServiceProviderFactory<TContainerBuilder> factory, Action<TContainerBuilder> configureAction)
-        {
-            _hostBuilder.UseServiceProviderFactory(factory)
-                .ConfigureContainer(configureAction);
-
-            return this;
-        }
-
-        IHostBuilder IHostBuilder.UseServiceProviderFactory<TContainerBuilder>(Func<HostBuilderContext, IServiceProviderFactory<TContainerBuilder>> factory)
-        {
-            _hostBuilder.UseServiceProviderFactory(factory);
-            return this;
-        }
-
-        IHost IHostBuilder.Build()
-        {
-            return _hostBuilder.Build();
-        }
-
-        IHostBuilder IHostBuilder.ConfigureAppConfiguration(Action<HostBuilderContext, IConfigurationBuilder> configureDelegate)
-        {
-            _hostBuilder.ConfigureAppConfiguration(configureDelegate);
-            return this;
-        }
-
-        IHostBuilder IHostBuilder.ConfigureContainer<TContainerBuilder>(Action<HostBuilderContext, TContainerBuilder> configureDelegate)
-        {
-            _hostBuilder.ConfigureContainer(configureDelegate);
-            return this;
-        }
-
-        IHostBuilder IHostBuilder.ConfigureHostConfiguration(Action<IConfigurationBuilder> configureDelegate)
-        {
-            _hostBuilder.ConfigureHostConfiguration(configureDelegate);
-            return this;
-        }
-
-        IHostBuilder IHostBuilder.ConfigureServices(Action<HostBuilderContext, IServiceCollection> configureDelegate)
-        {
-            _hostBuilder.ConfigureServices(configureDelegate);
-            return this;
         }
 
         private class WebHostBuilder : IWebHostBuilder

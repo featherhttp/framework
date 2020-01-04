@@ -15,7 +15,7 @@ class Program
 
         builder.Configuration.AddYamlFile("appsettings.yml", optional: true);
 
-        builder.UseSerilog((context, configuration) 
+        builder.Host.UseSerilog((context, configuration) 
             => configuration
                 .Enrich
                 .FromLogContext()
@@ -23,9 +23,9 @@ class Program
                 .Console()
             );
 
-        builder.UseServiceProviderFactory(new AutofacServiceProviderFactory());
+        builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 
-        builder.ConfigureContainer<ContainerBuilder>(b =>
+        builder.Host.ConfigureContainer<ContainerBuilder>(b =>
         {
             // Register services using Autofac specific methods here
         });
