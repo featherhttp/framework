@@ -18,7 +18,7 @@ jobs:
     - name: dotnet build
       run: dotnet build FeatherHttp.sln -c Release
 
-    - name: update nuspec and template csproj with nuget version      
+    - name: nuget version update      
       run: |
         dotnet tool install --tool-path . nbgv;
         $version = ./nbgv get-version -v NugetPackageVersion;
@@ -26,7 +26,7 @@ jobs:
         $nuspecXml.selectNodes("//version") | % {
           $_."#text" = $version
         }
-        $csprojXml = [xml](Get-Content) ./template/content/featherhttp-template.csproj)
+        $csprojXml = [xml](Get-Content ./template/content/featherhttp-template.csproj)
         $csprojXml.selectNodes("//PackageReference") | % {
           $_.Version = $version
         }
