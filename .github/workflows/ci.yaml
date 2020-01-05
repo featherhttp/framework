@@ -34,7 +34,7 @@ jobs:
       run: dotnet pack FeatherHttp.sln -c Release --no-build --include-source --include-symbols
 
     - name: setup nuget
-      if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+      #if: github.event_name == 'push' && github.ref == 'refs/heads/master'
       uses: NuGet/setup-nuget@v1.0.2
       with:
         nuget-version: latest
