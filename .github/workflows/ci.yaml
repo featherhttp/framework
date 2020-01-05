@@ -18,13 +18,14 @@ jobs:
     - name: dotnet build
       run: dotnet build FeatherHttp.sln -c Release
 
-    - name: update nuspec and template csproj with nuget version
-      shell: pwsh
+    - name: update nuspec and template csproj with nuget version      
       run: |
         dotnet tool install --tool-path . nbgv;
         $version = nbvg get-version -v NugetPackageVersion;
         ((Get-Content -path ./template/FeatherHttpTemplate.nuspec -Raw) -replace "$nugetVersion" $version) | Set-Content ./template/FeatherHttpTemplate.nuspec;
         ((Get-Content -path ./template/content/featherhttp-template.csproj -Raw) -replace "$nugetVersion" $version) | Set-Content ./template/content/featherhttp-template.csproj;
+      shell: pwsh
+
       
     - name: dotnet test
       run: dotnet test FeatherHttp.sln -c Release --no-build
