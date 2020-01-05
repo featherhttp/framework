@@ -21,7 +21,7 @@ jobs:
     - name: update nuspec and template csproj with nuget version      
       run: |
         dotnet tool install --tool-path . nbgv;
-        $version = nbgv get-version -v NugetPackageVersion;
+        $version = ./nbgv get-version -v NugetPackageVersion;
         ((Get-Content -path ./template/FeatherHttpTemplate.nuspec -Raw) -replace "$nugetVersion", $version) | Set-Content ./template/FeatherHttpTemplate.nuspec;
         ((Get-Content -path ./template/content/featherhttp-template.csproj -Raw) -replace "$nugetVersion", $version) | Set-Content ./template/content/featherhttp-template.csproj;
       shell: pwsh
