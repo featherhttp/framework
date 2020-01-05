@@ -43,8 +43,8 @@ jobs:
       if: github.event_name == 'push' && github.ref == 'refs/heads/master'
       run: nuget setapikey ${{ secrets.FEEDZ_TOKEN }} -Config nuget.config -Source https://f.feedz.io/macivor/featherhttp/nuget/index.json
 
-   - name: Set symbols API key
-     if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    - name: Set symbols API key
+      if: github.event_name == 'push' && github.ref == 'refs/heads/master'
       run: nuget setapikey ${{ secrets.FEEDZ_TOKEN }} -Config nuget.config -Source https://f.feedz.io/macivor/featherhttp/symbols
 
     - name: push packages
