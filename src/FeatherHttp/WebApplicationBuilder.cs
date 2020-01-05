@@ -84,11 +84,6 @@ namespace Microsoft.AspNetCore.Builder
         public IHostBuilder Host { get; }
 
         /// <summary>
-        /// A central location for sharing state between components during the host building process.
-        /// </summary>
-        public IDictionary<object, object> Properties => _hostBuilder.Properties;
-
-        /// <summary>
         /// Builds the <see cref="WebApplication"/>.
         /// </summary>
         /// <returns>A configured <see cref="WebApplication"/>.</returns>
