@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <package>
     <metadata>
-        <id>FeatherHttpTemplate</id>
+        <id>FeatherHttp.Templates</id>
         <version>0.1.31-alpha</version>
-        <title>FeatherHttp Template for dotnet-new</title>
+        <title>FeatherHttp Templates for dotnet-new</title>
         <summary>A dotnet-new template for FeatherHttp applications.</summary>
         <description>A dotnet-new template for FeatherHttp applications.</description>
         <authors>David Fowler</authors>
