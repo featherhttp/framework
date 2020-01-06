@@ -43,11 +43,10 @@ jobs:
       run: dotnet nuget push **/*.nupkg -s https://f.feedz.io/davidfowl/featherhttp/nuget/index.json -ss https://f.feedz.io/macivor/featherhttp/symbols --skip-duplicate
     
 
-
-    - name: nuget version update
-      uses: actions/checkout@master
+    - uses: actions/checkout@master
       with:
-        ref: ${{ github.ref }}      
+        ref: ${{ github.ref }}  
+    - name: nuget version update
       run: |
         dotnet tool install --tool-path . nbgv;
         $version = ./nbgv get-version -v NugetPackageVersion;
@@ -62,18 +61,12 @@ jobs:
       shell: pwsh
 
     - name: Commit files
-      uses: actions/checkout@master
-      with:
-        ref: ${{ github.ref }}  
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
         git commit -m "Updated Nuget Version" -a
         
     - name: Push changes
-      uses: actions/checkout@master
-      with:
-        ref: ${{ github.ref }}  
       uses: ad-m/github-push-action@master
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
