@@ -47,14 +47,15 @@ jobs:
         ref: ${{ github.ref }}  
 
     - name: nuget version update
-      run: powershell ./update-nuget-references.ps1
+      run: | 
+        dotnet tool install --tool-path . nbgv;
+        powershell ./update-nuget-references.ps1
 
     - name: Commit files
       run: |
         git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Action"
-        git add *
-        git commit -m "Updated Nuget Version"
+        git config --local user.name "GitHub Action"        
+        git commit -m "Updated Nuget Version" -a
         
     - name: Push changes
       uses: ad-m/github-push-action@master
