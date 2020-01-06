@@ -47,18 +47,7 @@ jobs:
       with:
         ref: ${{ github.ref }}  
     - name: nuget version update
-      run: |
-        dotnet tool install --tool-path . nbgv;
-        $version = ./nbgv get-version -v NugetPackageVersion;
-        $nuspecXml = [xml](Get-Content ./template/FeatherHttpTemplate.nuspec)
-        $nuspecXml.selectNodes("//version") | % {
-          $_."#text" = $version
-        }
-        $csprojXml = [xml](Get-Content ./template/content/featherhttp-template.csproj)
-        $csprojXml.selectNodes("//PackageReference") | % {
-          $_.Version = $version
-        }
-      shell: pwsh
+      run: powershell ./update-nuget-references.ps1
 
     - name: Commit files
       run: |
