@@ -74,7 +74,7 @@ namespace Microsoft.AspNetCore.Builder
         public ILoggingBuilder Logging { get; }
 
         /// <summary>
-        /// A builder for configuring web specific properties. 
+        /// A builder for configuring server specific properties. 
         /// </summary>
         public IWebHostBuilder Server { get; }
 
