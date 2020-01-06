@@ -41,42 +41,42 @@ jobs:
     - name: push packages
       if: github.event_name == 'push' && github.ref == 'refs/heads/master'
       run: dotnet nuget push **/*.nupkg -s https://f.feedz.io/davidfowl/featherhttp/nuget/index.json -ss https://f.feedz.io/macivor/featherhttp/symbols --skip-duplicate
+    
 
-  update-nuget-version: 
-    runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@master
-        with:
-          ref: ${{ github.ref }}
 
-      - name: Setup .NET Core SDK
-        uses: actions/setup-dotnet@v1.0.0
-        with:
-          version: 3.1.100
+    - name: nuget version update
+      uses: actions/checkout@master
+      with:
+        ref: ${{ github.ref }}      
+      run: |
+        dotnet tool install --tool-path . nbgv;
+        $version = ./nbgv get-version -v NugetPackageVersion;
+        $nuspecXml = [xml](Get-Content ./template/FeatherHttpTemplate.nuspec)
+        $nuspecXml.selectNodes("//version") | % {
+          $_."#text" = $version
+        }
+        $csprojXml = [xml](Get-Content ./template/content/featherhttp-template.csproj)
+        $csprojXml.selectNodes("//PackageReference") | % {
+          $_.Version = $version
+        }
+      shell: pwsh
 
-      - name: nuget version update      
-        run: |
-          dotnet tool install --tool-path . nbgv;
-          $version = ./nbgv get-version -v NugetPackageVersion;
-          $nuspecXml = [xml](Get-Content ./template/FeatherHttpTemplate.nuspec)
-          $nuspecXml.selectNodes("//version") | % {
-            $_."#text" = $version
-          }
-          $csprojXml = [xml](Get-Content ./template/content/featherhttp-template.csproj)
-          $csprojXml.selectNodes("//PackageReference") | % {
-            $_.Version = $version
-          }
-        shell: pwsh
-
-      - name: Commit files
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git commit -m "Updated Nuget Version" -a
-          
-      - name: Push changes
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{ github.head_ref }}
+    - name: Commit files
+      uses: actions/checkout@master
+      with:
+        ref: ${{ github.ref }}  
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git commit -m "Updated Nuget Version" -a
+        
+    - name: Push changes
+      uses: actions/checkout@master
+      with:
+        ref: ${{ github.ref }}  
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: ${{ github.head_ref }}
+      
 
