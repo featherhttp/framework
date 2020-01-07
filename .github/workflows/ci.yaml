@@ -6,7 +6,7 @@ jobs:
   update-template:    
     runs-on: windows-latest
     steps:
-    - uses: actions/checkout@master
+    - uses: actions/checkout@v2
       with:
         ref: ${{ github.ref }} 
     - name: install nbgv
