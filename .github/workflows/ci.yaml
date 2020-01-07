@@ -30,36 +30,52 @@ jobs:
         nuget-version: latest
 
     - name: Set API key
-      if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-      run: nuget setapikey ${{ secrets.FEEDZ_TOKEN }} -Config nuget.config -Source https://f.feedz.io/davidfowl/featherhttp/nuget/index.json
+      #if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+      run: nuget setapikey ${{ secrets.FEEDZ_TOKEN }} -Config nuget.config -Source https://f.feedz.io/macivor/featherhttp/nuget/index.json
 
     - name: Set symbols API key
-      if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-      run: nuget setapikey ${{ secrets.FEEDZ_TOKEN }} -Config nuget.config -Source https://f.feedz.io/davidfowl/featherhttp/symbols
+      #if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+      run: nuget setapikey ${{ secrets.FEEDZ_TOKEN }} -Config nuget.config -Source https://f.feedz.io/macivor/featherhttp/symbols
 
     - name: push packages
-      if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-      run: dotnet nuget push **/*.nupkg -s https://f.feedz.io/davidfowl/featherhttp/nuget/index.json -ss https://f.feedz.io/macivor/featherhttp/symbols --skip-duplicate
+      #if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+      run: dotnet nuget push **/*.nupkg -s https://f.feedz.io/macivor/featherhttp/nuget/index.json -ss https://f.feedz.io/macivor/featherhttp/symbols --skip-duplicate
     
     - uses: actions/checkout@master
       with:
         ref: ${{ github.ref }} 
+
     - name: install nbgv
       run: dotnet tool install --tool-path . nbgv;
+
     - name: nuget version update
       run: | 
         powershell ./update-nuget-references.ps1
         git status        
+
     - name: Commit files
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"        
         git commit -m "Updated Nuget Version" -a
+
     - name: Push changes
       uses: ad-m/github-push-action@master
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         branch: ${{ github.ref }}
+
+  test-template-build:
+    needs: build
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: build template
+      run: dotnet build ./template/content/featherhttp-template.csproj
+
+
+  
 
       
 
