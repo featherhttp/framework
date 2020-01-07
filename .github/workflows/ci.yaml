@@ -3,8 +3,30 @@ name: CI
 on: [push, pull_request]
 
 jobs:
+  update-template:    
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@master
+      with:
+        ref: ${{ github.ref }} 
+    - name: install nbgv
+      run: dotnet tool install --tool-path . nbgv;
+    - name: nuget version update
+      run: | 
+        powershell ./update-nuget-references.ps1
+        git status        
+    - name: Commit files
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"        
+        git commit -m "Updated Nuget Version" -a
+    - name: Push changes
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: ${{ github.ref }} 
   build:
-
+    needs: update-template
     runs-on: windows-latest
 
     steps:
@@ -42,28 +64,6 @@ jobs:
       if: github.event_name == 'push' && github.ref == 'refs/heads/master'
       run: dotnet nuget push **/*.nupkg -s https://f.feedz.io/davidfowl/featherhttp/nuget/index.json -ss https://f.feedz.io/macivor/featherhttp/symbols --skip-duplicate
 
-  update-template:
-    needs: build
-    runs-on: windows-latest
-    steps:
-    - uses: actions/checkout@master
-      with:
-        ref: ${{ github.ref }} 
-    - name: install nbgv
-      run: dotnet tool install --tool-path . nbgv;
-    - name: nuget version update
-      run: | 
-        powershell ./update-nuget-references.ps1
-        git status        
-    - name: Commit files
-      run: |
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Action"        
-        git commit -m "Updated Nuget Version" -a
-    - name: Push changes
-      uses: ad-m/github-push-action@master
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        branch: ${{ github.ref }} 
+
       
 
