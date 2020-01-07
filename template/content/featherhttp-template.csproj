@@ -4,6 +4,6 @@
     <RootNamespace>featherhttp_template</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="FeatherHttp" Version="0.1.70-alpha.gc6fcadcb36" />
+    <PackageReference Include="FeatherHttp" Version="0.1.72-alpha.gbd5557b49b" />
   </ItemGroup>
 </Project>
