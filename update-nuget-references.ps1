@@ -5,7 +5,7 @@ if (Get-Command "nbgv.exe" -ErrorAction SilentlyContinue) {
     $version = nbgv get-version -v NugetPackageVersion;
 }
 elseif (Get-Command "./nbgv.exe" -ErrorAction SilentlyContinue) {
-    $version = ./nbvg get-version -v NugetPackageVersion;
+    $version = ./nbgv get-version -v NugetPackageVersion;
 }
 if ($version -ne "Default") {
     $nuspecXml = [xml](Get-Content ./template/FeatherHttpTemplate.nuspec)
