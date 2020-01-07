@@ -43,6 +43,7 @@ jobs:
       run: dotnet nuget push **/*.nupkg -s https://f.feedz.io/davidfowl/featherhttp/nuget/index.json -ss https://f.feedz.io/macivor/featherhttp/symbols --skip-duplicate
 
   update-template:
+    needs: build
     runs-on: windows-latest
     steps:
     - uses: actions/checkout@master
