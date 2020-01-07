@@ -49,10 +49,10 @@ jobs:
     - uses: actions/checkout@master
       with:
         ref: ${{ github.ref }} 
-        fetch_depth: 1 
+    - name: install nbgv
+      run: dotnet tool install --tool-path . nbgv;
     - name: nuget version update
       run: | 
-        dotnet tool install --tool-path . nbgv;
         powershell ./update-nuget-references.ps1
         git status        
     - name: Commit files
