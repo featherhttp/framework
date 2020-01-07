@@ -52,6 +52,7 @@ jobs:
       run: | 
         dotnet tool install --tool-path . nbgv;
         powershell ./update-nuget-references.ps1
+        git status        
     - name: Commit files
       run: |
         git config --local user.email "action@github.com"
