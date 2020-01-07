@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>FeatherHttp.Templates</id>
-    <version>0.1.72-alpha.gbd5557b49b</version>
+    <version>0.1.75-alpha.g0b7560d732</version>
     <title>FeatherHttp Templates for dotnet-new</title>
     <summary>A dotnet-new template for FeatherHttp applications.</summary>
     <description>A dotnet-new template for FeatherHttp applications.</description>
