@@ -48,7 +48,8 @@ jobs:
     steps:
     - uses: actions/checkout@master
       with:
-        ref: ${{ github.ref }}  
+        ref: ${{ github.ref }} 
+        fetch_depth: 1 
     - name: nuget version update
       run: | 
         dotnet tool install --tool-path . nbgv;
