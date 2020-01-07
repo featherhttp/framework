@@ -42,21 +42,21 @@ jobs:
       if: github.event_name == 'push' && github.ref == 'refs/heads/master'
       run: dotnet nuget push **/*.nupkg -s https://f.feedz.io/davidfowl/featherhttp/nuget/index.json -ss https://f.feedz.io/macivor/featherhttp/symbols --skip-duplicate
 
+  update-template:
+    runs-on: windows-latest
+    steps:
     - uses: actions/checkout@master
       with:
         ref: ${{ github.ref }}  
-
     - name: nuget version update
       run: | 
         dotnet tool install --tool-path . nbgv;
         powershell ./update-nuget-references.ps1
-
     - name: Commit files
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"        
         git commit -m "Updated Nuget Version" -a
-        
     - name: Push changes
       uses: ad-m/github-push-action@master
       with:
