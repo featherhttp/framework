@@ -1,22 +1,24 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <package>
-    <metadata>
-        <id>FeatherHttp.Templates</id>
-        <version>0.1.31-alpha.g4846ad0495</version>
-        <title>FeatherHttp Templates for dotnet-new</title>
-        <summary>A dotnet-new template for FeatherHttp applications.</summary>
-        <description>A dotnet-new template for FeatherHttp applications.</description>
-        <authors>David Fowler</authors>
-        <owners>David Fowler</owners>
-        <projectUrl>https://github.com/davidfowl/FeatherHttp</projectUrl>
-        <iconUrl></iconUrl>
-        <requireLicenseAcceptance>false</requireLicenseAcceptance>
-        <licenseUrl>https://github.com/davidfowl/FeatherHttp/blob/master/LICENSE</licenseUrl>
-        <releaseNotes></releaseNotes>
-        <language>en-GB</language>
-        <tags>featherhttp asp dotnet new template</tags>
-        <packageTypes>
-            <packageType name="Template" />
-        </packageTypes>
-    </metadata>
+  <metadata>
+    <id>FeatherHttp.Templates</id>
+    <version>0.1.79-alpha.g10497a24ec</version>
+    <title>FeatherHttp Templates for dotnet-new</title>
+    <summary>A dotnet-new template for FeatherHttp applications.</summary>
+    <description>A dotnet-new template for FeatherHttp applications.</description>
+    <authors>David Fowler</authors>
+    <owners>David Fowler</owners>
+    <projectUrl>https://github.com/davidfowl/FeatherHttp</projectUrl>
+    <iconUrl>
+    </iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <licenseUrl>https://github.com/davidfowl/FeatherHttp/blob/master/LICENSE</licenseUrl>
+    <releaseNotes>
+    </releaseNotes>
+    <language>en-GB</language>
+    <tags>featherhttp asp dotnet new template</tags>
+    <packageTypes>
+      <packageType name="Template" />
+    </packageTypes>
+  </metadata>
 </package>

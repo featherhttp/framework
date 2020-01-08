@@ -1,12 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
-
-  <PropertyGroup>    
+  <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <RootNamespace>featherhttp_template</RootNamespace>
   </PropertyGroup>
-
   <ItemGroup>
-    <PackageReference Include="FeatherHttp" Version="0.1.31-alpha.g4846ad0495" />
+    <PackageReference Include="FeatherHttp" Version="0.1.79-alpha.g10497a24ec" />
   </ItemGroup>
-
 </Project>
