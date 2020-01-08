@@ -64,14 +64,8 @@ jobs:
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         branch: ${{ github.ref }}
-
-  test-template-build:
-    needs: build
-    runs-on: windows-latest
-
-    steps:
     - uses: actions/checkout@v2
-    - name: build template
+    - name: test build template
       run: dotnet build ./template/content/featherhttp-template.csproj
 
 
