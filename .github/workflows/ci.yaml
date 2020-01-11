@@ -10,7 +10,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
-      
     - name: Setup .NET Core SDK
       uses: actions/setup-dotnet@v1.0.0
       with:
@@ -22,7 +21,7 @@ jobs:
     - name: assign version env
       run: | 
         $featherVersion = Get-ChildItem .\src\FeatherHttp\bin\Release\netcoreapp3.1\FeatherHttp.dll | Select-Object -ExpandProperty VersionInfo | Select-Object ProductVersion | Select-Object -ExpandProperty ProductVersion
-        $nerdbankFeatherVersion = $featherVersion
+        ${{ env.nerdbankFeatherVersion = $featherVersion }}
      
     - name: dotnet test
       run: dotnet test FeatherHttp.sln -c Release --no-build
