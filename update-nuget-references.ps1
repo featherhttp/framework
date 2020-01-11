@@ -1,12 +1,4 @@
-$version = "Default"
-if (Get-Command "nbgv.exe" -ErrorAction SilentlyContinue) {
-    #if testing locally you will need to install nbgv
-    #dotnet tools install -g nbgv
-    $version = nbgv get-version -v NugetPackageVersion;
-}
-elseif (Get-Command "./nbgv.exe" -ErrorAction SilentlyContinue) {
-    $version = ./nbgv get-version -v NugetPackageVersion;    
-}
+$version = $(Get-Content NUGET_VERSION)
 if (!$version) { $version = "Default" }
 if ($version -ne "Default") {
     $nuspecXml = [xml](Get-Content ./template/FeatherHttpTemplate.nuspec)
