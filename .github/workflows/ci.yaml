@@ -6,7 +6,7 @@ jobs:
   build:
     runs-on: windows-latest
     env:
-      feather-version: unknown
+      nerdbankFeatherVersion: unknown
 
     steps:
     - uses: actions/checkout@v1
@@ -22,7 +22,7 @@ jobs:
     - name: assign version env
       run: | 
         $featherVersion = Get-ChildItem .\src\FeatherHttp\bin\Release\netcoreapp3.1\FeatherHttp.dll | Select-Object -ExpandProperty VersionInfo | Select-Object ProductVersion | Select-Object -ExpandProperty ProductVersion
-        echo ::set-env name=feather-version:: $featherVersion
+        echo ::set-env name=nerdbankFeatherVersion:: $featherVersion
      
     - name: dotnet test
       run: dotnet test FeatherHttp.sln -c Release --no-build
@@ -54,7 +54,7 @@ jobs:
         ref: ${{ github.ref }} 
 
     - name: test if feather-version
-      run: echo $feather-version
+      run: echo $nerdbankFeatherVersion
     
     - name: install nbgv
       if: github.event_name == 'push' && github.ref == 'refs/heads/master'
