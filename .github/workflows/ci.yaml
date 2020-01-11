@@ -22,7 +22,7 @@ jobs:
     - name: assign version env
       run: | 
         $featherVersion = Get-ChildItem .\src\FeatherHttp\bin\Release\netcoreapp3.1\FeatherHttp.dll | Select-Object -ExpandProperty VersionInfo | Select-Object ProductVersion | Select-Object -ExpandProperty ProductVersion
-        echo ::set-env name=nerdbankFeatherVersion::$featherVersion
+        $nerdbankFeatherVersion = $featherVersion
      
     - name: dotnet test
       run: dotnet test FeatherHttp.sln -c Release --no-build
