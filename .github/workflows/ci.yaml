@@ -52,27 +52,27 @@ jobs:
         ref: ${{ github.ref }} 
 
     - name: nuget version update
-      #if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+      if: github.event_name == 'push' && github.ref == 'refs/heads/master'
       run: | 
         powershell ./update-nuget-references.ps1
         git status        
 
     - name: Commit files
-      #if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+      if: github.event_name == 'push' && github.ref == 'refs/heads/master'
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"        
         git commit -m "Updated Nuget Version" -a
 
     - name: Push changes
-      #if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+      if: github.event_name == 'push' && github.ref == 'refs/heads/master'
       uses: ad-m/github-push-action@master
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         branch: ${{ github.ref }}
 
     - name: test build template
-      #if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+      if: github.event_name == 'push' && github.ref == 'refs/heads/master'
       run: dotnet build ./template/content/featherhttp-template.csproj
 
 
