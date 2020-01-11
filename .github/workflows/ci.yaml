@@ -15,13 +15,13 @@ jobs:
      
     - name: dotnet build
       run: dotnet build FeatherHttp.sln -c Release
-
+      
     - name: assign version env
       run: | 
         $featherVersion = Get-ChildItem .\src\FeatherHttp\bin\Release\netcoreapp3.1\FeatherHttp.dll | Select-Object -ExpandProperty VersionInfo | Select-Object ProductVersion | Select-Object -ExpandProperty ProductVersion
         $featherVersion = $featherVersion.replace("+", ".")
         echo $featherVersion > NUGET_VERSION
-     
+
     - name: dotnet test
       run: dotnet test FeatherHttp.sln -c Release --no-build
 
