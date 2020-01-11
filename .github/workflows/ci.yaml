@@ -51,7 +51,7 @@ jobs:
         ref: ${{ github.ref }} 
 
     - name: test if feather-version
-      run: echo NUGET_VERSION
+      run: echo $(cat NUGET_VERSION)
     
     - name: install nbgv
       if: github.event_name == 'push' && github.ref == 'refs/heads/master'
