@@ -16,6 +16,9 @@ jobs:
     - name: dotnet build
       run: dotnet build FeatherHttp.sln -c Release    
 
+    - name: template build
+      run: dotnet build template/bin/feather-template.csproj -c Release
+
     - name: dotnet test
       run: dotnet test FeatherHttp.sln -c Release --no-build
 

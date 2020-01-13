@@ -5,10 +5,6 @@
     <RootNamespace>featherhttp_template</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-<<<<<<< Updated upstream
-    <PackageReference Include="FeatherHttp" Version="0.1.91-alpha.52698409e9" />
-=======
     <PackageReference Include="FeatherHttp" Version="$(GitAssemblyInformationalVersion)" />
->>>>>>> Stashed changes
   </ItemGroup>
 </Project>
