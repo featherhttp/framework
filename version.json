@@ -3,5 +3,8 @@
     "version": "0.1-alpha",
     "nugetPackageVersion": {
         "semVer": 2 
+    },
+    "cloudBuild": {
+        "setVersionVariables": true
     }
   }

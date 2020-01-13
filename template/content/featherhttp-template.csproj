@@ -1,9 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <RootNamespace>featherhttp_template</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+<<<<<<< Updated upstream
     <PackageReference Include="FeatherHttp" Version="0.1.91-alpha.52698409e9" />
+=======
+    <PackageReference Include="FeatherHttp" Version="$(GitAssemblyInformationalVersion)" />
+>>>>>>> Stashed changes
   </ItemGroup>
 </Project>
