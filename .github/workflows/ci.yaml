@@ -42,7 +42,7 @@ jobs:
 
     - name: update nuget package for template/content/featherhttp-template.csproj
       #if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-      run: dotnet add package FeatherHttp -v $(GitAssemblyInformationalVersion)
+      run: dotnet add package FeatherHttp -v $GitAssemblyInformationalVersion
 
     - name: template build test
       #if: github.event_name == 'push' && github.ref == 'refs/heads/master'
