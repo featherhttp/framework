@@ -23,8 +23,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GRPCClient", "samples\GRPCC
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Uber", "samples\Uber\Uber.csproj", "{A0B2F580-93E6-4404-AD2A-571271340F9C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "template-builder", "template\template-builder.csproj", "{69AE6C17-86CE-40EF-A861-0630BCA2A4C7}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -143,18 +141,6 @@ Global
 		{A0B2F580-93E6-4404-AD2A-571271340F9C}.Release|x64.Build.0 = Release|Any CPU
 		{A0B2F580-93E6-4404-AD2A-571271340F9C}.Release|x86.ActiveCfg = Release|Any CPU
 		{A0B2F580-93E6-4404-AD2A-571271340F9C}.Release|x86.Build.0 = Release|Any CPU
-		{69AE6C17-86CE-40EF-A861-0630BCA2A4C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{69AE6C17-86CE-40EF-A861-0630BCA2A4C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{69AE6C17-86CE-40EF-A861-0630BCA2A4C7}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{69AE6C17-86CE-40EF-A861-0630BCA2A4C7}.Debug|x64.Build.0 = Debug|Any CPU
-		{69AE6C17-86CE-40EF-A861-0630BCA2A4C7}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{69AE6C17-86CE-40EF-A861-0630BCA2A4C7}.Debug|x86.Build.0 = Debug|Any CPU
-		{69AE6C17-86CE-40EF-A861-0630BCA2A4C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{69AE6C17-86CE-40EF-A861-0630BCA2A4C7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{69AE6C17-86CE-40EF-A861-0630BCA2A4C7}.Release|x64.ActiveCfg = Release|Any CPU
-		{69AE6C17-86CE-40EF-A861-0630BCA2A4C7}.Release|x64.Build.0 = Release|Any CPU
-		{69AE6C17-86CE-40EF-A861-0630BCA2A4C7}.Release|x86.ActiveCfg = Release|Any CPU
-		{69AE6C17-86CE-40EF-A861-0630BCA2A4C7}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

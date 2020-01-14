@@ -40,6 +40,22 @@ jobs:
       #if: github.event_name == 'push' && github.ref == 'refs/heads/master'
       run: dotnet nuget push **/*.nupkg -s https://f.feedz.io/macivor/featherhttp/nuget/index.json -ss https://f.feedz.io/macivor/featherhttp/symbols --skip-duplicate
 
+    - name: update nuget package for template/content/featherhttp-template.csproj
+      #if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+      run: dotnet add package FeatherHttp -v $(GitAssemblyInformationalVersion)
+
     - name: template build test
       #if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-      run: dotnet build template/bin/Release/netcoreapp3.1/content/featherhttp-template.csproj -c Release
+      run: dotnet build template/content/featherhttp-template.csproj -c Release
+    
+    - name: build template package
+      #if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+      run: dotnet build ./template/template.csproj -c Release
+
+    - name: pack template nuget
+      #if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+      run: dotnet pack ./template/template.csproj -c Release --no-build --include-source --include-symbols
+
+    - name: dotnet push template nuget
+      #if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+      run: dotnet nuget push ./template/bin/Release/**/*.nupkg -s https://f.feedz.io/macivor/featherhttp/nuget/index.json -ss https://f.feedz.io/macivor/featherhttp/symbols --skip-duplicate
