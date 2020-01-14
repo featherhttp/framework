@@ -46,7 +46,9 @@ jobs:
 
     - name: update nuget package for template/content/featherhttp-template.csproj
       #if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-      run: dotnet add ./template/content/featherhttp-template.csproj package FeatherHttp -v ./nbgv get-version -v NugetPackageVersion
+      run: | 
+        $version = ./nbgv get-version -v NugetPackageVersion
+        dotnet add ./template/content/featherhttp-template.csproj package FeatherHttp $version
 
     - name: template build test
       #if: github.event_name == 'push' && github.ref == 'refs/heads/master'
