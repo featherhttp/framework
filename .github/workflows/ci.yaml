@@ -40,9 +40,9 @@ jobs:
       #if: github.event_name == 'push' && github.ref == 'refs/heads/master'
       run: dotnet nuget push **/*.nupkg -s https://f.feedz.io/macivor/featherhttp/nuget/index.json -ss https://f.feedz.io/macivor/featherhttp/symbols --skip-duplicate
 
-    - name: update nuget package for template/content/featherhttp-template.csproj
+    #- name: update nuget package for template/content/featherhttp-template.csproj
       #if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-      run: dotnet add package FeatherHttp -v $GitAssemblyInformationalVersion
+      #run: dotnet add package FeatherHttp -v $GitAssemblyInformationalVersion
 
     - name: template build test
       #if: github.event_name == 'push' && github.ref == 'refs/heads/master'
