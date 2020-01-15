@@ -44,23 +44,23 @@ jobs:
       #if: github.event_name == 'push' && github.ref == 'refs/heads/master'
       run: dotnet tool install --tool-path . nbgv 
 
-    - name: update nuget package for template/content/featherhttp-template.csproj
+    - name: update nuget package
       #if: github.event_name == 'push' && github.ref == 'refs/heads/master'
       run: | 
         $version = ./nbgv get-version -v NugetPackageVersion
-        dotnet add ./template/content/featherhttp-template.csproj package FeatherHttp -v $version
-        dotnet add ./template/template.csproj package FeatherHttp -v $version
+        dotnet add ./template/content/FeatherHttpProject.csproj package FeatherHttp -v $version
+        dotnet add ./template/FeatherHttpTemplate.csproj package FeatherHttp -v $version
     
     - name: build template package
       #if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-      run: dotnet build ./template/template.csproj -c Release
+      run: dotnet build ./template/FeatherHttpTemplate.csproj -c Release
 
     - name: pack template nuget
       #if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-      run: dotnet pack ./template/template.csproj -c Release
+      run: dotnet pack ./template/FeatherHttpTemplate.csproj -c Release
 
     - name: dotnet push template nuget
       #if: github.event_name == 'push' && github.ref == 'refs/heads/master'
       run: |
-       $path = Get-ChildItem ./template/*.nupkg -recurse | % {$_.FullName} | Select-Object -Index 0
-       dotnet nuget push $path -s https://f.feedz.io/macivor/featherhttp/nuget/index.json -ss https://f.feedz.io/macivor/featherhttp/symbols --skip-duplicate
+        $path = Get-ChildItem ./template/*.nupkg -recurse | % {$_.FullName} | Select-Object -Index 0
+        dotnet nuget push $path -s https://f.feedz.io/macivor/featherhttp/nuget/index.json -ss https://f.feedz.io/macivor/featherhttp/symbols --skip-duplicate

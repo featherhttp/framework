@@ -8,7 +8,7 @@
     <PackageReference Include="FeatherHttp" Version="0.1.34-alpha.g005ace427a" />
   </ItemGroup>
   <Target Name="CopyTemplate" AfterTargets="AfterBuild">
-    <Copy SourceFiles="./content/featherhttp-template.csproj" DestinationFolder="$(OutDir)" />
+    <Copy SourceFiles="./content/FeatherHttpProject.csproj" DestinationFolder="$(OutDir)" />
     <Copy SourceFiles="./content/Program.cs" DestinationFolder="$(OutDir)" />
     <Copy SourceFiles="./content/nuget.config" DestinationFolder="$(OutDir)" />
     <Copy SourceFiles="./content/.template.config/template.json" DestinationFolder="$(OutDir).template.config/" />
