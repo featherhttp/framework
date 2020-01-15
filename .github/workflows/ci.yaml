@@ -49,6 +49,7 @@ jobs:
       run: | 
         $version = ./nbgv get-version -v NugetPackageVersion
         dotnet add ./template/content/featherhttp-template.csproj package FeatherHttp -v $version
+        dotnet add ./template/template.csproj package FeatherHttp -v $version
     
     - name: build template package
       #if: github.event_name == 'push' && github.ref == 'refs/heads/master'
@@ -56,8 +57,10 @@ jobs:
 
     - name: pack template nuget
       #if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-      run: dotnet pack ./template/template.csproj -c Release --no-build --include-source --include-symbols
+      run: dotnet pack ./template/template.csproj -c Release
 
     - name: dotnet push template nuget
       #if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-      run: dotnet nuget push ./template/bin/Release/*.nupkg -s https://f.feedz.io/macivor/featherhttp/nuget/index.json -ss https://f.feedz.io/macivor/featherhttp/symbols --skip-duplicate
+      run: |
+       $path = Get-ChildItem *.nupkg -recurse | % {$_.FullName} | Select-Object -Index 0
+       dotnet nuget push $path -s https://f.feedz.io/macivor/featherhttp/nuget/index.json -ss https://f.feedz.io/macivor/featherhttp/symbols --skip-duplicate
