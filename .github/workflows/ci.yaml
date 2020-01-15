@@ -60,4 +60,4 @@ jobs:
 
     - name: dotnet push template nuget
       #if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-      run: dotnet nuget push ./template/bin/Release/**/*.nupkg -s https://f.feedz.io/macivor/featherhttp/nuget/index.json -ss https://f.feedz.io/macivor/featherhttp/symbols --skip-duplicate
+      run: dotnet nuget push ./template/bin/Release/*.nupkg -s https://f.feedz.io/macivor/featherhttp/nuget/index.json -ss https://f.feedz.io/macivor/featherhttp/symbols --skip-duplicate
