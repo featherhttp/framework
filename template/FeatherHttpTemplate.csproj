@@ -1,16 +1,19 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
+    <PackageType>Template</PackageType>
+    <PackageId>FeatherHttp.Templates</PackageId>
+    <Authors>David Fowler</Authors>
+    <Description>Templates to use when creating a FeatherHttp application.</Description>
+    <PackageTags>dotnet-new;templates;featherhttp</PackageTags>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <IsPackable>True</IsPackable>
+    <IncludeContentInPack>true</IncludeContentInPack>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <ContentTargetFolders>content</ContentTargetFolders>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="FeatherHttp" Version="0.1.34-alpha.g005ace427a" />
+    <Content Include="content\**\*" Exclude="contnent\**\bin\**;content\**\obj\**" />
+    <Compile Remove="**\*" />    
   </ItemGroup>
-  <Target Name="CopyTemplate" AfterTargets="AfterBuild">
-    <Copy SourceFiles="./content/FeatherHttpProject.csproj" DestinationFolder="$(OutDir)" />
-    <Copy SourceFiles="./content/Program.cs" DestinationFolder="$(OutDir)" />
-    <Copy SourceFiles="./content/nuget.config" DestinationFolder="$(OutDir)" />
-    <Copy SourceFiles="./content/.template.config/template.json" DestinationFolder="$(OutDir).template.config/" />
-  </Target>
 </Project>
