@@ -49,7 +49,6 @@ jobs:
       run: | 
         $version = ./nbgv get-version -v NugetPackageVersion
         dotnet add ./template/content/FeatherHttpProject.csproj package FeatherHttp -v $version
-        dotnet add ./template/FeatherHttpTemplate.csproj package FeatherHttp -v $version
     
     - name: build template package
       #if: github.event_name == 'push' && github.ref == 'refs/heads/master'
