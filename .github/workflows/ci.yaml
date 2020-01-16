@@ -56,7 +56,9 @@ jobs:
 
     - name: set template version
       #if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-      run: ./nbgv prepare-release --versionIncrement Major
+      run: |
+        git commit -a -m 'preparing for stable nuget template package'
+       ./nbgv prepare-release --versionIncrement Major
 
     - name: pack template nuget
       #if: github.event_name == 'push' && github.ref == 'refs/heads/master'
