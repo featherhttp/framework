@@ -56,7 +56,10 @@ jobs:
 
     - name: prepare to prepare for nuget release
       #if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-      run: git commit -a -m 'preparing for stable nuget template'
+      run: | 
+        git config --global user.email "github-actions@github.com"
+        git config --global user.nam "Github Actions"
+        git commit -a -m 'preparing for stable nuget template'
 
     - name: prepare nuget release
       #if: github.event_name == 'push' && github.ref == 'refs/heads/master'
