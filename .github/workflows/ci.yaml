@@ -54,6 +54,10 @@ jobs:
       #if: github.event_name == 'push' && github.ref == 'refs/heads/master'
       run: dotnet build ./template/FeatherHttpTemplate.csproj -c Release
 
+    - name: set template version
+      #if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+      run: ./nbgv set-version 1.0.0
+
     - name: pack template nuget
       #if: github.event_name == 'push' && github.ref == 'refs/heads/master'
       run: dotnet pack ./template/FeatherHttpTemplate.csproj -c Release
