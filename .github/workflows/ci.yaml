@@ -54,11 +54,13 @@ jobs:
       #if: github.event_name == 'push' && github.ref == 'refs/heads/master'
       run: dotnet build ./template/FeatherHttpTemplate.csproj -c Release
 
-    - name: set template version
+    - name: prepare to prepare for nuget release
       #if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-      run: |
-        git commit -a -m 'preparing for stable nuget template package'
-       ./nbgv prepare-release --versionIncrement Major
+      run: git commit -a -m 'preparing for stable nuget template'
+
+    - name: prepare nuget release
+      #if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+      run: ./nbgv prepare-release --versionIncrement Major
 
     - name: pack template nuget
       #if: github.event_name == 'push' && github.ref == 'refs/heads/master'
