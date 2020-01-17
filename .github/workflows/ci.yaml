@@ -7,7 +7,12 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - uses: actions/checkout@master
+    - uses: actions/checkout@v2
+      with:
+        ref: ci-changes
+    - run: |
+        git fetch --prune --unshallow origin HEAD
+    
     - name: Setup .NET Core SDK
       uses: actions/setup-dotnet@v1.0.0
       with:
