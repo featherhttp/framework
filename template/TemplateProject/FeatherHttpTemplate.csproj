@@ -13,7 +13,7 @@
     <ContentTargetFolders>content</ContentTargetFolders>
   </PropertyGroup>
   <ItemGroup>
-    <Content Include="content\**\*" Exclude="content\**\bin\**;content\**\obj\**" />
+    <Content Include="..\TemplateContent\**\*" Exclude="TemplateContent\**\bin\**;TemplateContent\**\obj\**" />
     <Compile Remove="**\*" />    
   </ItemGroup>
 </Project>
