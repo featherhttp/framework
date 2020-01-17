@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <PackageType>Template</PackageType>
+    <PackageId>FeatherHttp.Templates</PackageId>
+    <Authors>David Fowler</Authors>
+    <Description>Templates to use when creating a FeatherHttp application.</Description>
+    <PackageTags>dotnet-new;templates;featherhttp</PackageTags>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <IsPackable>True</IsPackable>
+    <IncludeContentInPack>true</IncludeContentInPack>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <ContentTargetFolders>content</ContentTargetFolders>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="..\TemplateContent\**\*" Exclude="TemplateContent\**\bin\**;TemplateContent\**\obj\**" />
+    <Compile Remove="**\*" />    
+  </ItemGroup>
+</Project>
