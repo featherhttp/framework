@@ -57,7 +57,7 @@ jobs:
     - name: pack template nuget
       #if: github.event_name == 'push' && github.ref == 'refs/heads/master'
       run: | 
-        ./nbgv set-version 1.0.0
+        git status        
         dotnet pack ./template/TemplateProject/FeatherHttpTemplate.csproj -c Release
 
     - name: dotnet push template nuget
