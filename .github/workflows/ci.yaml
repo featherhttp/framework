@@ -47,12 +47,10 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: ensure branch gh-pages exists
-        run: |
-          git show-ref --verify --quiet refs/heads/gh-pages
-          if ($?) {
-            git branch gh-pages
-          }
+        #if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        run: git branch -f gh-pages
       - name: generate gh-pages
+        #if: github.event_name == 'push' && github.ref == 'refs/heads/master'
         run: |
           cd ./docs
           npm install
