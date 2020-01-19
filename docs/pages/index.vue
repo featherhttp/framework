@@ -18,17 +18,6 @@
             <p class="text-center">
               <a class="underline" target="_blank" rel="noreferrer" href="https://dotnet.microsoft.com/download/dotnet-core/3.1">.NET Core Download page</a>
             </p>
-            <p>The .NET SDK comes with the dotnet CLI. This CLI tool will allow you to create new projects and download nuget packages to enable the tutorials below.</p>       
-            <h3 class="h3 text-center">(optional) Copy and add the dotnet feather template repository</h3>
-            <p>One of the great things the .NET CLI can do for you is quicky spin up a project by using <span class="code">dotnet new</span>. 
-            Unfortunately, the Feather HTTP project template does not yet come as a part of the CLI. However you can remedy this by creating your own featherhttp template.</p>
-            <p>You can do this in several easy steps.</p>
-            <ol class="pt-0 max-w-full overflow-scroll lg:overflow-hidden">
-              <li>Clone this repository: <span class="code">git clone git@github.com:RobotOptimist/featherhttp-template.git</span></li>
-              <li>From the terminal, navigate to the root of the cloned repository</li>     
-              <li>run <span class="code">dotnet new -i ./</span></li>         
-            </ol>
-            <p>Now you can spin up a new dotnet feather project in a new directory any time you want by typing <span class="code">dotnet new featherhttp</span></p>            
           </div>
         </section>
         <section class="lg:flex flex-wrap justify-center">
