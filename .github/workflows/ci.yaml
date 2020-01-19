@@ -45,7 +45,10 @@ jobs:
   generate-docs:
     runs-on: ubuntu-latest    
     steps:
-      - uses: actions/checkout@v1
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: false
       - name: generate gh-pages
         #if: github.event_name == 'push' && github.ref == 'refs/heads/master'
         run: |
@@ -56,6 +59,7 @@ jobs:
         #if: github.event_name == 'push' && github.ref == 'refs/heads/master'
         uses: JamesIves/github-pages-deploy-action@releases/v3
         with: 
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
           BRANCH: gh-pages
           FOLDER: docs/dist
+          CLEAN: true
