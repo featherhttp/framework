@@ -61,13 +61,11 @@ jobs:
           cd ./docs
           npm install
           npm run generate:gh-pages
-<<<<<<< HEAD
           npm run deploy
-=======
       - name: deploy
         uses: JamesIves/github-pages-deploy-action@releases/v3
         with: 
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BRANCH: gh-pages
           FOLDER: dist
->>>>>>> using existing github action to deploy to gh-pages from build
+          FOLDER: docs/dist
