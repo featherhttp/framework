@@ -50,13 +50,13 @@ jobs:
         with:
           persist-credentials: false
       - name: generate gh-pages
-        #if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
         run: |
           cd ./docs
           npm install
           npm run generate:gh-pages
       - name: deploy
-        #if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
         uses: JamesIves/github-pages-deploy-action@releases/v3
         with: 
           ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
