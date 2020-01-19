@@ -13,8 +13,8 @@ BenchmarkDotNet.Artifacts/
 .gradle/
 src/SignalR/clients/**/dist/
 modules/
-dist/
 .nuxt/
+dist/
 
 # File extensions
 *.aps
@@ -44,4 +44,3 @@ msbuild.ProjectImports.zip
 StyleCop.Cache
 UpgradeLog.htm
 .idea
-sw.js
