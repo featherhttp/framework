@@ -55,9 +55,6 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v2
-      - name: ensure branch gh-pages exists
-        #if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-        run: git branch -f gh-pages
       - name: generate gh-pages
         #if: github.event_name == 'push' && github.ref == 'refs/heads/master'
         run: |
