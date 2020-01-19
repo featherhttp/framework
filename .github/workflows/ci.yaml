@@ -47,12 +47,13 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - name: generate gh-pages
-        #if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
         run: |
           cd ./docs
           npm install
           npm run generate:gh-pages
       - name: deploy
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
         uses: JamesIves/github-pages-deploy-action@releases/v3
         with: 
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
