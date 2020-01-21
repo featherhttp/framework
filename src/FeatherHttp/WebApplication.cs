@@ -59,6 +59,11 @@ namespace Microsoft.AspNetCore.Builder
         public ILogger Logger { get; }
 
         /// <summary>
+        /// The list of addresses that the HTTP server is bound to.
+        /// </summary>
+        public IEnumerable<string> Addresses => ServerFeatures.Get<IServerAddressesFeature>().Addresses;
+
+        /// <summary>
         /// A collection of HTTP features of the server.
         /// </summary>
         public IFeatureCollection ServerFeatures => _host.Services.GetRequiredService<IServer>().Features;
