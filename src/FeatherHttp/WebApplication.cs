@@ -19,7 +19,7 @@ namespace Microsoft.AspNetCore.Builder
     /// <summary>
     /// The web application used to configure the http pipeline, and routes.
     /// </summary>
-    public class WebApplication : IHost, IApplicationBuilder, IEndpointRouteBuilder
+    public class WebApplication : IHost, IDisposable, IApplicationBuilder, IEndpointRouteBuilder
     {
         internal const string EndpointRouteBuilder = "__EndpointRouteBuilder";
 
@@ -140,7 +140,7 @@ namespace Microsoft.AspNetCore.Builder
         /// <summary>
         /// Disposes the application.
         /// </summary>
-        void IDisposable.Dispose()
+        public void Dispose()
         {
             _host.Dispose();
         }
