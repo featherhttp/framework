@@ -1,6 +1,9 @@
 ﻿
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
@@ -13,13 +16,14 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.EventLog;
 
 namespace Microsoft.AspNetCore.Builder
 {
     /// <summary>
     /// The web application used to configure the http pipeline, and routes.
     /// </summary>
-    public class WebApplication : IHost, IApplicationBuilder, IEndpointRouteBuilder
+    public class WebApplication : IHost, IDisposable, IApplicationBuilder, IEndpointRouteBuilder
     {
         internal const string EndpointRouteBuilder = "__EndpointRouteBuilder";
 
@@ -57,6 +61,11 @@ namespace Microsoft.AspNetCore.Builder
         /// The default logger for the application.
         /// </summary>
         public ILogger Logger { get; }
+
+        /// <summary>
+        /// The list of addresses that the HTTP server is bound to.
+        /// </summary>
+        public IEnumerable<string> Addresses => ServerFeatures.Get<IServerAddressesFeature>().Addresses;
 
         /// <summary>
         /// A collection of HTTP features of the server.
@@ -104,7 +113,11 @@ namespace Microsoft.AspNetCore.Builder
         /// <returns></returns>
         public static WebApplicationBuilder CreateBuilder()
         {
-            return new WebApplicationBuilder(Host.CreateDefaultBuilder());
+            // The assumption here is that this API is called by the application directly
+            // this might give a better approximation of the default application name
+            return new WebApplicationBuilder(
+                Assembly.GetCallingAssembly(), 
+                builder => ConfigureBuilder(builder, args: null));
         }
 
         /// <summary>
@@ -114,7 +127,9 @@ namespace Microsoft.AspNetCore.Builder
         /// <returns></returns>
         public static WebApplicationBuilder CreateBuilder(string[] args)
         {
-            return new WebApplicationBuilder(Host.CreateDefaultBuilder(args));
+            return new WebApplicationBuilder(
+                Assembly.GetCallingAssembly(), 
+                builder => ConfigureBuilder(builder, args));
         }
 
         /// <summary>
@@ -140,14 +155,14 @@ namespace Microsoft.AspNetCore.Builder
         /// <summary>
         /// Disposes the application.
         /// </summary>
-        void IDisposable.Dispose()
+        public void Dispose()
         {
             _host.Dispose();
         }
 
         internal RequestDelegate Build() => ApplicationBuilder.Build();
         RequestDelegate IApplicationBuilder.Build() => Build();
-    
+
         IApplicationBuilder IApplicationBuilder.New()
         {
             // REVIEW: Should this be wrapping another type?
@@ -161,5 +176,73 @@ namespace Microsoft.AspNetCore.Builder
         }
 
         IApplicationBuilder IEndpointRouteBuilder.CreateApplicationBuilder() => ApplicationBuilder.New();
+
+        private static void ConfigureBuilder(IHostBuilder builder, string[] args)
+        {
+            // Keep in sync with this Host.CreateDefaultBuilder https://github.com/dotnet/extensions/blob/cb60ad143f61f0d96b0860895065351e86f79a10/src/Hosting/Hosting/src/Host.cs#L56
+
+            builder.UseContentRoot(Directory.GetCurrentDirectory());
+            builder.ConfigureHostConfiguration(config =>
+            {
+                config.AddEnvironmentVariables(prefix: "DOTNET_");
+                if (args != null)
+                {
+                    config.AddCommandLine(args);
+                }
+            });
+
+            builder.ConfigureAppConfiguration((hostingContext, config) =>
+            {
+                var env = hostingContext.HostingEnvironment;
+
+                config.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                      .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true);
+
+                if (env.IsDevelopment() && !string.IsNullOrEmpty(env.ApplicationName))
+                {
+                    var appAssembly = Assembly.Load(new AssemblyName(env.ApplicationName));
+                    if (appAssembly != null)
+                    {
+                        config.AddUserSecrets(appAssembly, optional: true);
+                    }
+                }
+
+                config.AddEnvironmentVariables();
+
+                if (args != null)
+                {
+                    config.AddCommandLine(args);
+                }
+            })
+            .ConfigureLogging((hostingContext, logging) =>
+            {
+                var isWindows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+
+                // IMPORTANT: This needs to be added *before* configuration is loaded, this lets
+                // the defaults be overridden by the configuration.
+                if (isWindows)
+                {
+                    // Default the EventLogLoggerProvider to warning or above
+                    logging.AddFilter<EventLogLoggerProvider>(level => level >= LogLevel.Warning);
+                }
+
+                logging.AddConfiguration(hostingContext.Configuration.GetSection("Logging"));
+                logging.AddConsole();
+                logging.AddDebug();
+                logging.AddEventSourceLogger();
+
+                if (isWindows)
+                {
+                    // Add the EventLogLoggerProvider on windows machines
+                    logging.AddEventLog();
+                }
+            })
+            .UseDefaultServiceProvider((context, options) =>
+            {
+                var isDevelopment = context.HostingEnvironment.IsDevelopment();
+                options.ValidateScopes = isDevelopment;
+                options.ValidateOnBuild = isDevelopment;
+            });
+        }
     }
 }
