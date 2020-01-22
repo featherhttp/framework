@@ -24,18 +24,18 @@ namespace Microsoft.AspNetCore.Builder
         /// <summary>
         /// Creates a <see cref="WebApplicationBuilder"/>.
         /// </summary>
-        public WebApplicationBuilder() : this(b => { })
+        public WebApplicationBuilder() : this(callingAssembly: null, b => { })
         {
 
         }
 
-        internal WebApplicationBuilder(Action<IHostBuilder> configureHost)
+        internal WebApplicationBuilder(Assembly callingAssembly, Action<IHostBuilder> configureHost)
         {
             Services = new ServiceCollection();
 
             // HACK: MVC and Identity do this horrible thing to get the hosting environment as an instance
             // from the service collection before it is built. That needs to be fixed...
-            var environment = new WebHostEnvironment();
+            var environment = new WebHostEnvironment(callingAssembly);
             Environment = environment;
             Services.AddSingleton(Environment);
 
@@ -344,11 +344,11 @@ namespace Microsoft.AspNetCore.Builder
 
         private class WebHostEnvironment : IWebHostEnvironment
         {
-            public WebHostEnvironment()
+            public WebHostEnvironment(Assembly callingAssembly)
             {
                 WebRootPath = "wwwroot";
                 ContentRootPath = Directory.GetCurrentDirectory();
-                ApplicationName = Assembly.GetEntryAssembly()?.GetName().Name;
+                ApplicationName = (callingAssembly ?? Assembly.GetEntryAssembly()).GetName().Name;
                 EnvironmentName = Environments.Development;
                 ResolveFileProviders();
             }

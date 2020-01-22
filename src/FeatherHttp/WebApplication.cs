@@ -113,7 +113,11 @@ namespace Microsoft.AspNetCore.Builder
         /// <returns></returns>
         public static WebApplicationBuilder CreateBuilder()
         {
-            return new WebApplicationBuilder(builder => ConfigureBuilder(builder, args: null));
+            // The assumption here is that this API is called by the application directly
+            // this might give a better approximation of the default application name
+            return new WebApplicationBuilder(
+                Assembly.GetCallingAssembly(), 
+                builder => ConfigureBuilder(builder, args: null));
         }
 
         /// <summary>
@@ -123,7 +127,9 @@ namespace Microsoft.AspNetCore.Builder
         /// <returns></returns>
         public static WebApplicationBuilder CreateBuilder(string[] args)
         {
-            return new WebApplicationBuilder(builder => ConfigureBuilder(builder, args));
+            return new WebApplicationBuilder(
+                Assembly.GetCallingAssembly(), 
+                builder => ConfigureBuilder(builder, args));
         }
 
         /// <summary>
@@ -156,7 +162,7 @@ namespace Microsoft.AspNetCore.Builder
 
         internal RequestDelegate Build() => ApplicationBuilder.Build();
         RequestDelegate IApplicationBuilder.Build() => Build();
-    
+
         IApplicationBuilder IApplicationBuilder.New()
         {
             // REVIEW: Should this be wrapping another type?
