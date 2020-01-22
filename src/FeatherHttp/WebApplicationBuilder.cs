@@ -89,14 +89,6 @@ namespace Microsoft.AspNetCore.Builder
 
             _hostBuilder.ConfigureWebHostDefaults(web =>
             {
-                // Make the default web host settings match and allow overrides
-                web.UseEnvironment(Environment.EnvironmentName);
-                web.UseContentRoot(Environment.ContentRootPath);
-                web.UseSetting(WebHostDefaults.ApplicationKey, Environment.ApplicationName);
-                web.UseSetting(WebHostDefaults.WebRootKey, Environment.WebRootPath);
-
-                _deferredWebHostBuilder.ExecuteActions(web);
-
                 web.Configure(destinationPipeline =>
                 {
                     // The endpoints were already added on the outside
@@ -157,6 +149,14 @@ namespace Microsoft.AspNetCore.Builder
                         destinationPipeline.Properties[item.Key] = item.Value;
                     }
                 });
+
+                // Make the default web host settings match and allow overrides
+                web.UseEnvironment(Environment.EnvironmentName);
+                web.UseContentRoot(Environment.ContentRootPath);
+                web.UseSetting(WebHostDefaults.ApplicationKey, Environment.ApplicationName);
+                web.UseSetting(WebHostDefaults.WebRootKey, Environment.WebRootPath);
+
+                _deferredWebHostBuilder.ExecuteActions(web);
             });
 
             _hostBuilder.ConfigureServices(services =>
@@ -341,7 +341,7 @@ namespace Microsoft.AspNetCore.Builder
             {
                 WebRootPath = "wwwroot";
                 ContentRootPath = Directory.GetCurrentDirectory();
-                ApplicationName = Assembly.GetEntryAssembly().GetName().Name;
+                ApplicationName = Assembly.GetEntryAssembly()?.GetName().Name;
                 EnvironmentName = Environments.Development;
                 ResolveFileProviders();
             }
