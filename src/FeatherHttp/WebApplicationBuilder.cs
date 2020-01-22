@@ -17,22 +17,20 @@ namespace Microsoft.AspNetCore.Builder
     /// </summary>
     public class WebApplicationBuilder
     {
-        private readonly IHostBuilder _hostBuilder;
+        private readonly HostBuilder _hostBuilder = new HostBuilder();
         private readonly DeferredHostBuilder _deferredHostBuilder;
         private readonly DeferredWebHostBuilder _deferredWebHostBuilder;
 
         /// <summary>
         /// Creates a <see cref="WebApplicationBuilder"/>.
         /// </summary>
-        public WebApplicationBuilder() : this(new HostBuilder())
+        public WebApplicationBuilder() : this(b => { })
         {
 
         }
 
-        internal WebApplicationBuilder(IHostBuilder hostBuilder)
+        internal WebApplicationBuilder(Action<IHostBuilder> configureHost)
         {
-            _hostBuilder = hostBuilder;
-
             Services = new ServiceCollection();
 
             // HACK: MVC and Identity do this horrible thing to get the hosting environment as an instance
@@ -41,10 +39,11 @@ namespace Microsoft.AspNetCore.Builder
             Environment = environment;
             Services.AddSingleton(Environment);
 
-            Configuration = new ConfigurationBuilder();
+            Configuration = new Configuration();
+            Configuration.SetBasePath(environment.ContentRootPath);
             Logging = new LoggingBuilder(Services);
-            Server = _deferredWebHostBuilder = new DeferredWebHostBuilder(environment);
-            Host = _deferredHostBuilder = new DeferredHostBuilder(environment);
+            Server = _deferredWebHostBuilder = new DeferredWebHostBuilder(Configuration, environment);
+            Host = _deferredHostBuilder = new DeferredHostBuilder(Configuration, configureHost, environment);
         }
 
         /// <summary>
@@ -60,7 +59,7 @@ namespace Microsoft.AspNetCore.Builder
         /// <summary>
         /// A collection of configuration providers for the application to compose. This is useful for adding new configuration sources and providers.
         /// </summary>
-        public IConfigurationBuilder Configuration { get; }
+        public Configuration Configuration { get; }
 
         /// <summary>
         /// A collection of logging providers for the applicaiton to compose. This is useful for adding new logging providers.
@@ -189,9 +188,12 @@ namespace Microsoft.AspNetCore.Builder
             private readonly IConfigurationBuilder _hostConfiguration = new ConfigurationBuilder();
 
             private readonly WebHostEnvironment _environment;
+            private readonly Configuration _configuration;
 
-            public DeferredHostBuilder(WebHostEnvironment environment)
+            public DeferredHostBuilder(Configuration configuration, Action<IHostBuilder> configureHost, WebHostEnvironment environment)
             {
+                _configuration = configuration;
+                _operations += configureHost;
                 _environment = environment;
             }
 
@@ -223,6 +225,7 @@ namespace Microsoft.AspNetCore.Builder
                 _environment.ContentRootPath = config[HostDefaults.ContentRootKey] ?? _environment.ContentRootPath;
                 _environment.EnvironmentName = config[HostDefaults.EnvironmentKey] ?? _environment.EnvironmentName;
                 _environment.ResolveFileProviders();
+                _configuration.ChangeBasePath(_environment.ContentRootPath);
 
                 _operations += b => b.ConfigureHostConfiguration(configureDelegate);
                 return this;
@@ -257,10 +260,12 @@ namespace Microsoft.AspNetCore.Builder
             private Action<IWebHostBuilder> _operations;
 
             private readonly WebHostEnvironment _environment;
+            private readonly Configuration _configuration;
             private readonly Dictionary<string, string> _settings = new Dictionary<string, string>();
 
-            public DeferredWebHostBuilder(WebHostEnvironment environment)
+            public DeferredWebHostBuilder(Configuration configuration, WebHostEnvironment environment)
             {
+                _configuration = configuration;
                 _environment = environment;
             }
 
@@ -304,6 +309,8 @@ namespace Microsoft.AspNetCore.Builder
                 {
                     _environment.ContentRootPath = value;
                     _environment.ResolveFileProviders();
+
+                    _configuration.ChangeBasePath(value);
                 }
                 else if (key == WebHostDefaults.EnvironmentKey)
                 {
