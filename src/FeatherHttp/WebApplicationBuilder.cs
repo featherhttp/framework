@@ -40,6 +40,10 @@ namespace Microsoft.AspNetCore.Builder
             Services.AddSingleton(Environment);
 
             Configuration = new Configuration();
+
+            // Run this inline to populate the configuration
+            configureHost(new ConfigurationHostBuilder(Configuration, Environment));
+
             Configuration.SetBasePath(environment.ContentRootPath);
             Logging = new LoggingBuilder(Services);
             Server = _deferredWebHostBuilder = new DeferredWebHostBuilder(Configuration, environment);
@@ -193,8 +197,8 @@ namespace Microsoft.AspNetCore.Builder
             public DeferredHostBuilder(Configuration configuration, Action<IHostBuilder> configureHost, WebHostEnvironment environment)
             {
                 _configuration = configuration;
-                _operations += configureHost;
                 _environment = environment;
+                _operations += configureHost;
             }
 
             public IHost Build()
