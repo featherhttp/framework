@@ -1,0 +1,16 @@
+{
+    "$schema": "http://json.schemastore.org/template",
+    "author": "David Fowler",
+    "classifications": [ "Web", "ASP.NET", "FeatherHttp" ],
+    "identity": "FeatherHttp.Templates",
+    "name": "FeatherHttp Templates",
+    "description": "Am ultra lightweight ASP.NET project starter",
+    "shortName": "featherhttp",
+    "tags": {
+      "language": "C#",
+      "type": "project"
+    },
+    "primaryOutputs": [{ "path": "FeatherHttpProject.csproj"}],
+    "sourceName": "FeatherHttp.Templates.HelloWorld",
+    "preferNameDirectory": true
+  }
