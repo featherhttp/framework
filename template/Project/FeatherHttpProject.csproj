@@ -9,7 +9,7 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>    
     <IncludeContentInPack>true</IncludeContentInPack>
     <IncludeBuildOutput>false</IncludeBuildOutput>
-    <ContentTargetFolders></ContentTargetFolders>    
+    <ContentTargetFolders>content/content</ContentTargetFolders>    
   </PropertyGroup>
   <ItemGroup>
     <Content Include="..\Content\**\*" Exclude="Content\**\bin\**;Content\**\obj\**" />
