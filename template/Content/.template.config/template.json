@@ -10,7 +10,7 @@
       "language": "C#",
       "type": "project"
     },
-    "primaryOutputs": [{ "path": "FeatherHttpProject.csproj"}],
+    "primaryOutputs": [{ "path": "FeatherHttpContent.csproj"}],
     "sourceName": "FeatherHttp.Templates.HelloWorld",
     "preferNameDirectory": true
   }
