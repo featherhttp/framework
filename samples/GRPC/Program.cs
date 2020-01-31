@@ -1,10 +1,9 @@
 ﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.DependencyInjection;
 using Grpc.Core;
-using Microsoft.Extensions.Logging;
 using GRPC;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 public class GreeterService : Greeter.GreeterBase
 {

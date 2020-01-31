@@ -1,6 +1,6 @@
-﻿using Grpc.Net.Client;
-using System;
+﻿using System;
 using System.Threading.Tasks;
+using Grpc.Net.Client;
 
 namespace GRPCClient
 {
