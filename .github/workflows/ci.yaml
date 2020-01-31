@@ -27,7 +27,7 @@ jobs:
     - name: update template nuget package
       if: github.event_name == 'push' && github.ref == 'refs/heads/master'
       run: | 
-        dotnet add  ./template/Content/FeatherHttpContent.csproj package FeatherHttp -v $env:NBGV_NuGetPackageVersion --no-restore        
+        ((Get-Content -path ./template/TemplateContent/FeatherHttpContent.csproj -Raw) -replace "TheNugetPackageVersion", $env:NBGV_NuGetPackageVersion) | Set-Content -Path ./template/TemplateContent/FeatherHttpProject.csproj
 
     #pack nuget template - note that directory structure does not resemble a normal template project (the content directory is not nested)
     #this is because the nuget template package must have a stable release version and has it's own version.json in order to be available to dotnet new -i FeatherHttp.Templates

@@ -4,6 +4,6 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="FeatherHttp" Version="0.1.34-alpha.g005ace427a" />
+    <PackageReference Include="FeatherHttp" Version="TheNugetPackageVersion" />
   </ItemGroup>
 </Project>
