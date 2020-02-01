@@ -21,19 +21,11 @@ jobs:
     - name: dotnet build
       run: dotnet build FeatherHttp.sln -c Release    
 
-    #update the FeatherHttpContent to have the latest prerelease version of FeatherHttp
+    # update the FeatherHttpContent to have the latest prerelease version of FeatherHttp
     - name: update template nuget package
       if: github.event_name == 'push' && github.ref == 'refs/heads/master'
       run: | 
-        ((Get-Content -path ./template/Content/FeatherHttpContent.csproj -Raw) -replace "\$\(PackageVersion\)", $env:NBGV_NuGetPackageVersion) | Set-Content -Path ./template/Content/FeatherHttpContent.csproj
-
-    #pack nuget template - note that directory structure does not resemble a normal template project (the content directory is not nested)
-    #this is because the nuget template package must have a stable release version and has it's own version.json in order to be available to dotnet new -i FeatherHttp.Templates
-    #dotnet new templating engine does not currently allow prerelease templates
-    - name: pack template nuget      
-      if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-      run: |          
-        dotnet pack ./template/FeatherHttpProject.csproj -c Release      
+        ((Get-Content -path ./src/FeatherHttp.Templates/Content/FeatherHttpContent.csproj -Raw) -replace "\$\(PackageVersion\)", $env:NBGV_NuGetPackageVersion) | Set-Content -Path ./src/FeatherHttp.Templates/Content/FeatherHttpContent.csproj
 
     - name: dotnet test
       run: dotnet test FeatherHttp.sln -c Release --no-build
