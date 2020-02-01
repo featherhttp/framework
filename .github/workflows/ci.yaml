@@ -33,7 +33,7 @@ jobs:
     - name: pack template nuget      
       if: github.event_name == 'push' && github.ref == 'refs/heads/master'
       run: |          
-        dotnet pack ./template/Project/FeatherHttpProject.csproj -c Release      
+        dotnet pack ./template/FeatherHttpProject.csproj -c Release      
 
     - name: dotnet test
       run: dotnet test FeatherHttp.sln -c Release --no-build
