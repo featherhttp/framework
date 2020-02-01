@@ -4,20 +4,37 @@ on: [push, pull_request]
 
 jobs:
   build:
-
     runs-on: windows-latest
 
     steps:
     - uses: actions/checkout@v1
-      
+
+    - uses: aarnott/nbgv@v0.3
+      with:
+        setAllVars: true
+    
     - name: Setup .NET Core SDK
       uses: actions/setup-dotnet@v1.0.0
       with:
-        version: 3.1.100
+        version: 3.1.100    
      
     - name: dotnet build
-      run: dotnet build FeatherHttp.sln -c Release
-      
+      run: dotnet build FeatherHttp.sln -c Release    
+
+    #update the FeatherHttpContent to have the latest prerelease version of FeatherHttp
+    - name: update template nuget package
+      if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+      run: | 
+        ((Get-Content -path ./template/Content/FeatherHttpContent.csproj -Raw) -replace "\$\(PackageVersion\)", $env:NBGV_NuGetPackageVersion) | Set-Content -Path ./template/Content/FeatherHttpContent.csproj
+
+    #pack nuget template - note that directory structure does not resemble a normal template project (the content directory is not nested)
+    #this is because the nuget template package must have a stable release version and has it's own version.json in order to be available to dotnet new -i FeatherHttp.Templates
+    #dotnet new templating engine does not currently allow prerelease templates
+    - name: pack template nuget      
+      if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+      run: |          
+        dotnet pack ./template/Project/FeatherHttpProject.csproj -c Release      
+
     - name: dotnet test
       run: dotnet test FeatherHttp.sln -c Release --no-build
 
