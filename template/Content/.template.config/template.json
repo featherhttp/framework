@@ -4,7 +4,7 @@
     "classifications": [ "Web", "ASP.NET", "FeatherHttp" ],
     "identity": "FeatherHttp.Templates",
     "name": "FeatherHttp Templates",
-    "description": "Am ultra lightweight ASP.NET project starter",
+    "description": "An ultra lightweight ASP.NET project starter",
     "shortName": "featherhttp",
     "tags": {
       "language": "C#",
