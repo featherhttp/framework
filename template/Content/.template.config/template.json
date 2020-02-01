@@ -3,9 +3,9 @@
     "author": "David Fowler",
     "classifications": [ "Web", "ASP.NET", "FeatherHttp" ],
     "identity": "FeatherHttp.Templates",
-    "name": "FeatherHttp Templates",
-    "description": "An ultra lightweight ASP.NET project starter",
-    "shortName": "featherhttp",
+    "name": "FeatherHttp",
+    "description": "A lightweight ASP.NET Core project",
+    "shortName": "feather",
     "tags": {
       "language": "C#",
       "type": "project"
