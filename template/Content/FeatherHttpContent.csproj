@@ -2,6 +2,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <RestoreSources>$(RestoreSources);https://f.feedz.io/davidfowl/featherhttp/nuget/index.json;</RestoreSources>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="FeatherHttp" Version="$(PackageVersion)" />
