@@ -25,32 +25,12 @@ static async Task Main(string[] args)
     await app.RunAsync();
 }
 ```
-            <prism class="overflow-scroll lg:overflow-hidden" :code="helloWorldCode" language="csharp">
-            </prism>
-        </div>                        
-        <p>Now you can run this by typing <span class="code">dotnet run.</span> You can then navigate to <a class="underline" href="http://localhost:5000">http://localhost:5000</a> view the output.</p>
-        <p>If you installed the template from getting started, then you already have this code.</p>
-    </div> -->
+                   
+Now you can run this by typing `dotnet run` You can then navigate to [http://localhost:5000](http://localhost:5000) to view the output.
 </template>
 
 <script>
 export default {
-    computed: {
-        helloWorldCode() {
-            return `static async Task Main(string[] args)
-{
-    var builder = WebApplicationHost.CreateDefaultBuilder(args);
 
-    var app = builder.Build();
-
-    app.MapGet("/", async context =>
-    {
-        await context.Response.WriteAsync("Hello World!");
-    });
-
-    await app.RunAsync();
-}`
-        }
-    }
 }
 </script>

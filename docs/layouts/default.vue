@@ -9,6 +9,10 @@
                       <nuxt />
                     </div>
                 </section>
+                <section class="lg:flex flex-wrap justify-center">
+                  <card class="lg:w-64 w-full" path="" title="Getting Started" description="The tools you need to start using FeatherHttp"></card>
+                  <card class="lg:w-64 w-full" v-for="topic in topics" :key="topic.title" :title="topic.title" :description="topic.description"></card>
+                </section>
             </div>
         </div>
     </div>
@@ -17,9 +21,30 @@
 
 <script>
 import siteNav from '../components/siteNav';
+import card from '../components/card'
+import topicsList from '../components/topicsList'
+import hljs from 'highlight.js/lib/highlight';
+import csharp from 'highlight.js/lib/languages/cs';
+import javascript from 'highlight.js/lib/languages/javascript';
+import typescript from 'highlight.js/lib/languages/typescript';
+import html from 'highlight.js/lib/languages/htmlbars';
+import 'highlight.js/styles/github.css';
 export default {
   components: {
-    siteNav
+    siteNav,
+    card,
+    topicsList
+  },
+  created() {
+    hljs.registerLanguage('csharp', csharp);
+    hljs.registerLanguage('javascript', javascript);
+    hljs.registerLanguage('typescript', typescript);
+    hljs.registerLanguage('html', html);
+  },
+  computed: {
+    topics() {
+      return this.$store.getters['topics/list'];
+    }
   }
 }
 </script>
@@ -57,5 +82,10 @@ export default {
   }
   li > p {
     @apply p-0 inline-block ml-4;
+  }
+  pre {
+    @apply p-4 m-8 rounded-lg;
+    background-color: lightgray;
+    overflow: auto;    
   }
 </style>

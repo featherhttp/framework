@@ -5,7 +5,7 @@
         </h2>
         <p class="mt-2 pl-0">{{description}}</p>
         <div class="mt-8 flex justify-end">
-            <nuxt-link class="underline p-3 pr-5 pl-5 bg-green-800 text-white font-bold rounded-lg" :to="`examples/${title.split(' ').join('-').toLowerCase()}`">Go to Tutorial</nuxt-link>
+            <nuxt-link class="underline p-3 pr-5 pl-5 bg-green-800 text-white font-bold rounded-lg" :to="`${path}/${title.split(' ').join('-').toLowerCase()}`">Go to Tutorial</nuxt-link>
         </div>        
     </div>
 </template>
@@ -19,6 +19,10 @@ export default {
         },
         description: {
             default: 'Default Description',
+            type: String
+        },
+        path: {
+            default: 'examples',
             type: String
         }
     }
