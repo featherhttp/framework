@@ -7,9 +7,7 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - uses: actions/checkout@v2
-    - run: |
-        git fetch --prune --unshallow origin HEAD
+    - uses: actions/checkout@v1
 
     - uses: aarnott/nbgv@v0.3
       with:
