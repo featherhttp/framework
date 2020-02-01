@@ -240,3 +240,5 @@ To use CI builds add the following nuget feed:
     </packageSources>
 </configuration>
 ```
+
+See the list of [versions](https://f.feedz.io/davidfowl/featherhttp/nuget/v3/packages/FeatherHttp/index.json)
