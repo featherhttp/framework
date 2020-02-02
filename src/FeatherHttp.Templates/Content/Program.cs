@@ -4,7 +4,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 
-namespace FeatherHttp.Templates.HelloWorld 
+namespace FeatherHttp_Template
 {
     class Program
     {
