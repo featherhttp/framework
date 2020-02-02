@@ -25,7 +25,7 @@ jobs:
     - name: update template nuget package
       if: github.event_name == 'push' && github.ref == 'refs/heads/master'
       run: | 
-        ((Get-Content -path ./src/FeatherHttp.Templates/Content/FeatherHttpContent.csproj -Raw) -replace "\$\(PackageVersion\)", $env:NBGV_NuGetPackageVersion) | Set-Content -Path ./src/FeatherHttp.Templates/Content/FeatherHttpContent.csproj
+        ((Get-Content -path ./src/FeatherHttp.Templates/Content/FeatherHttp-Template.csproj -Raw) -replace "\$\(PackageVersion\)", $env:NBGV_NuGetPackageVersion) | Set-Content -Path ./src/FeatherHttp.Templates/Content/FeatherHttp-Template.csproj
 
     - name: dotnet test
       run: dotnet test FeatherHttp.sln -c Release --no-build
