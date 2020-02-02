@@ -228,6 +228,20 @@ class Program
 
 ## Using CI Builds
 
+To use the `dotnet new` template, use the following command
+
+```
+dotnet new -i FeatherHttp.Templates::{version} --nuget-source https://f.feedz.io/davidfowl/featherhttp/nuget/index.json
+```
+
+Once you've installed the template, run:
+
+```
+dotnet new feather -n {name}
+``` 
+
+This will create a new project using FeatherHttp.
+
 To use CI builds add the following nuget feed:
 
 ```xml
