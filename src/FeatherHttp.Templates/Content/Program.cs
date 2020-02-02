@@ -1,8 +1,6 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Routing;
 
 namespace FeatherHttp_Template
 {
@@ -10,9 +8,7 @@ namespace FeatherHttp_Template
     {
         static async Task Main(string[] args)
         {
-            var builder = WebApplication.CreateBuilder(args);
-
-            var app = builder.Build();
+            var app = WebApplication.Create(args);
 
             app.MapGet("/", async context =>
             {
