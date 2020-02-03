@@ -1,8 +1,7 @@
 ﻿using System.Threading.Tasks;
+using Carter;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Hosting;
-using Carter;
 
 public class HomeModule : CarterModule
 {

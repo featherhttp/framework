@@ -1,0 +1,15 @@
+{
+    "$schema": "http://json.schemastore.org/template",
+    "author": "David Fowler",
+    "classifications": [ "Web", "ASP.NET", "FeatherHttp" ],
+    "identity": "FeatherHttp.Templates",
+    "name": "FeatherHttp",
+    "description": "A lightweight ASP.NET Core project",
+    "shortName": "feather",
+    "tags": {
+      "language": "C#",
+      "type": "project"
+    },
+    "sourceName": "FeatherHttp-Template",
+    "preferNameDirectory": true
+  }

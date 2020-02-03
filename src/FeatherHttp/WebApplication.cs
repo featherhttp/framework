@@ -110,7 +110,7 @@ namespace Microsoft.AspNetCore.Builder
         /// <summary>
         /// Initializes a new instance of the <see cref="WebApplicationBuilder"/> class with pre-configured defaults.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The <see cref="WebApplicationBuilder"/></returns>
         public static WebApplicationBuilder CreateBuilder()
         {
             // The assumption here is that this API is called by the application directly
@@ -124,12 +124,35 @@ namespace Microsoft.AspNetCore.Builder
         /// Initializes a new instance of the <see cref="WebApplicationBuilder"/> class with pre-configured defaults.
         /// </summary>
         /// <param name="args">Command line arguments</param>
-        /// <returns></returns>
+        /// <returns>The <see cref="WebApplicationBuilder"/></returns>
         public static WebApplicationBuilder CreateBuilder(string[] args)
         {
             return new WebApplicationBuilder(
                 Assembly.GetCallingAssembly(), 
                 builder => ConfigureBuilder(builder, args));
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="WebApplication"/> class with pre-configured defaults.
+        /// </summary>
+        /// <param name="args">Command line arguments</param>
+        /// <returns>The <see cref="WebApplication"/></returns>
+        public static WebApplication Create(string[] args)
+        {
+            return new WebApplicationBuilder(
+                Assembly.GetCallingAssembly(),
+                builder => ConfigureBuilder(builder, args)).Build();
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="WebApplication"/> class with pre-configured defaults.
+        /// </summary>
+        /// <returns>The <see cref="WebApplication"/></returns>
+        public static WebApplication Create()
+        {
+            return new WebApplicationBuilder(
+                Assembly.GetCallingAssembly(),
+                builder => ConfigureBuilder(builder, args: null)).Build();
         }
 
         /// <summary>
@@ -176,6 +199,24 @@ namespace Microsoft.AspNetCore.Builder
         }
 
         IApplicationBuilder IEndpointRouteBuilder.CreateApplicationBuilder() => ApplicationBuilder.New();
+
+        /// <summary>
+        /// Runs an application and returns a Task that only completes when the token is triggered or shutdown is triggered.
+        /// </summary>
+        /// <param name="cancellationToken">The token to trigger shutdown.</param>
+        /// <returns>A <see cref="Task"/>that represents the asynchronous operation.</returns>
+        public Task RunAsync(CancellationToken cancellationToken = default)
+        {
+            return HostingAbstractionsHostExtensions.RunAsync(this, cancellationToken);
+        }
+
+        /// <summary>
+        /// Runs an application and block the calling thread until host shutdown.
+        /// </summary>
+        public void Run()
+        {
+            HostingAbstractionsHostExtensions.Run(this);
+        }
 
         private static void ConfigureBuilder(IHostBuilder builder, string[] args)
         {

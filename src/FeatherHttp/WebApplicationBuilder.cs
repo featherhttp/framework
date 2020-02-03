@@ -350,18 +350,24 @@ namespace Microsoft.AspNetCore.Builder
         {
             public WebHostEnvironment(Assembly callingAssembly)
             {
-                WebRootPath = "wwwroot";
                 ContentRootPath = Directory.GetCurrentDirectory();
                 ApplicationName = (callingAssembly ?? Assembly.GetEntryAssembly()).GetName().Name;
                 EnvironmentName = Environments.Development;
+
+                // Default to /wwwroot if it exists.
+                var wwwroot = Path.Combine(ContentRootPath, "wwwroot");
+                if (Directory.Exists(wwwroot))
+                {
+                    WebRootPath = wwwroot;
+                }
+
                 ResolveFileProviders();
             }
 
             public void ResolveFileProviders()
             {
-                var webRoot = Path.Combine(ContentRootPath, WebRootPath);
                 ContentRootFileProvider = Directory.Exists(ContentRootPath) ? (IFileProvider)new PhysicalFileProvider(ContentRootPath) : new NullFileProvider();
-                WebRootFileProvider = Directory.Exists(webRoot) ? (IFileProvider)new PhysicalFileProvider(webRoot) : new NullFileProvider();
+                WebRootFileProvider = WebRootPath != null && Directory.Exists(Path.Combine(ContentRootPath, WebRootPath)) ? (IFileProvider)new PhysicalFileProvider(Path.Combine(ContentRootPath, WebRootPath)) : new NullFileProvider();
             }
 
             public IFileProvider WebRootFileProvider { get; set; }

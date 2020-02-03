@@ -13,16 +13,13 @@ A lightweight low ceremony APIs for ASP.NET Core applications.
 ```C#
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Http;
 
 class Program
 {
     static async Task Main(string[] args)
     {
-        var builder = WebApplication.CreateBuilder(args);
-
-        var app = builder.Build();
+        var app = WebApplication.Create(args);
 
         app.MapGet("/", async context =>
         {
@@ -40,9 +37,8 @@ class Program
 ```C#
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
 
 public class HomeController
 {
@@ -71,10 +67,9 @@ class Program
 
 ```C#
 using System.Threading.Tasks;
+using Carter;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Hosting;
-using Carter;
 
 public class HomeModule : CarterModule
 {
@@ -106,9 +101,8 @@ class Program
 ```C#
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.DependencyInjection;
 
 class Chat : Hub
 {
@@ -136,11 +130,10 @@ class Program
 
 ```C#
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.DependencyInjection;
 using Grpc.Core;
-using Greet;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 public class GreeterService : Greeter.GreeterBase
 {
@@ -235,6 +228,20 @@ class Program
 
 ## Using CI Builds
 
+To use the `dotnet new` template, use the following command
+
+```
+dotnet new -i FeatherHttp.Templates::{version} --nuget-source https://f.feedz.io/davidfowl/featherhttp/nuget/index.json
+```
+
+Once you've installed the template, run:
+
+```
+dotnet new feather -n {name}
+``` 
+
+This will create a new project using FeatherHttp.
+
 To use CI builds add the following nuget feed:
 
 ```xml
@@ -247,3 +254,5 @@ To use CI builds add the following nuget feed:
     </packageSources>
 </configuration>
 ```
+
+See the list of [versions](https://f.feedz.io/davidfowl/featherhttp/nuget/v3/packages/FeatherHttp/index.json)
