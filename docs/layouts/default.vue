@@ -65,13 +65,16 @@ export default {
   ol {
     @apply list-decimal list-inside
   }
+  ul {
+    @apply list-disc list-inside
+  }
   section pre.language-csharp {
     @apply bg-black pl-40
   }
   a {
     @apply underline
   }
-  p, ol {
+  p, ol, ul {
     @apply text-xl p-4;
     @screen lg {
       @apply text-base p-8;
@@ -83,9 +86,16 @@ export default {
   li > p {
     @apply p-0 inline-block ml-4;
   }
+  code {
+    @apply p-2 rounded-lg;
+    background-color: lightgray;
+  }
   pre {
     @apply p-4 m-8 rounded-lg;
     background-color: lightgray;
     overflow: auto;    
+  }
+  pre > code {
+    @apply p-0;
   }
 </style>
