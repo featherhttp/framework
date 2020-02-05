@@ -18,4 +18,20 @@
     <p class="text-center">
         <a class="underline" target="_blank" rel="noreferrer" href="https://dotnet.microsoft.com/download/dotnet-core/3.1">.NET Core Download page</a>
     </p>
+
+    To use the `dotnet new` template, use the following command    
+
+    ```
+    dotnet new -i FeatherHttp.Templates::{version} --nuget-source https://f.feedz.io/davidfowl/featherhttp/nuget/index.json
+    ```
+    Where version is:
+    [![feedz.io](https://img.shields.io/badge/endpoint.svg?url=https%3A%2F%2Ff.feedz.io%2Fdavidfowl%2Ffeatherhttp%2Fshield%2FFeatherHttp%2Flatest&label=FeatherHttp)](https://f.feedz.io/davidfowl/featherhttp/packages/FeatherHttp/latest/download)
+
+    Once you've installed the template, run:
+
+    ```
+    dotnet new feather -n {name}
+    ``` 
+
+    This will create a new project using FeatherHttp.
 </template>
