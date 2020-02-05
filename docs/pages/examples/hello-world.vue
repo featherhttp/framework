@@ -2,20 +2,15 @@
 # Hello World
                 
 While this section will serve to show how to do something with Feather Http, we'll also be going over some of the core concepts necessary to understand what Feather Http is attempting to do and how it works.
-We'll be breaking down these core concepts: 
-                                
-1. WebApplicationHostBuilder
-2. WebApplicationHost
-3. WebHostEnvironment
 
-But first, here is the code to get your project up, running and saying "Hello World!" You can add this to the program.cs
+## The Code
+
+Heres the code that will get your Hello World app off the ground
 
 ``` csharp
 static async Task Main(string[] args)
 {
-    var builder = WebApplicationHost.CreateDefaultBuilder(args);
-
-    var app = builder.Build();
+    var app = WebApplication.Create(args);    
 
     app.MapGet("/", async context =>
     {
@@ -27,6 +22,13 @@ static async Task Main(string[] args)
 ```
                    
 Now you can run this by typing `dotnet run` You can then navigate to [http://localhost:5000](http://localhost:5000) to view the output.
+
+We'll be breaking down these core concepts: 
+1. WebApplication
+    1. What is the WebApplication class?        
+    2. What is really happening in Create?
+2. MapGet
+3. RunAsync
 </template>
 
 <script>
