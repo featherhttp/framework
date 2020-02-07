@@ -51,25 +51,25 @@ jobs:
       if: github.event_name == 'push' && github.ref == 'refs/heads/master'
       run: dotnet nuget push **/*.nupkg -s https://f.feedz.io/davidfowl/featherhttp/nuget/index.json -ss https://f.feedz.io/davidfowl/featherhttp/symbols --skip-duplicate
 
-  generate-docs:
-    runs-on: ubuntu-latest    
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-        with:
-          persist-credentials: false
-      - name: generate gh-pages
-        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-        run: |
-          cd ./docs
-          npm install
-          npm run generate:gh-pages
-          npm run deploy
-      - name: deploy
-        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-        uses: JamesIves/github-pages-deploy-action@releases/v3
-        with: 
-          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-          BRANCH: gh-pages
-          FOLDER: docs/dist
-          CLEAN: true
+  # generate-docs:
+  #   runs-on: ubuntu-latest    
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v2
+  #       with:
+  #         persist-credentials: false
+  #     - name: generate gh-pages
+  #       if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+  #       run: |
+  #         cd ./docs
+  #         npm install
+  #         npm run generate:gh-pages
+  #         npm run deploy
+  #     - name: deploy
+  #       if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+  #       uses: JamesIves/github-pages-deploy-action@releases/v3
+  #       with: 
+  #         ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+  #         BRANCH: gh-pages
+  #         FOLDER: docs/dist
+  #         CLEAN: true
