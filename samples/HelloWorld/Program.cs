@@ -10,7 +10,7 @@ class Program
 
         app.MapGet("/", async context =>
         {
-            await context.Response.WriteAsync("Hello World");
+            await context.Response.WriteJsonAsync(new { message = "Hello World" });
         });
 
         await app.RunAsync();
