@@ -22,6 +22,19 @@ namespace Microsoft.AspNetCore.Http
         }
 
         /// <summary>
+        /// Attempts to represent the specified route parameter as the specified type.
+        /// </summary>
+        /// <typeparam name="TValue">The target type to convert to.</typeparam>
+        /// <param name="routeValues">The route values</param>
+        /// <param name="name">The route parameter name</param>
+        /// <returns>A tuple of the converted value and a bool that determined is the operation was successful.</returns>
+        public static (TValue Value, bool Ok) Get<TValue>(this RouteValueDictionary routeValues, string name)
+        {
+            var ok = routeValues.TryGet(name, out TValue value);
+            return (value, ok);
+        }
+
+        /// <summary>
         /// Attempts to represent the specified query string parameter as the specified type.
         /// </summary>
         /// <typeparam name="TValue">The target type to convert to.</typeparam>
@@ -35,6 +48,19 @@ namespace Microsoft.AspNetCore.Http
         }
 
         /// <summary>
+        /// Attempts to represent the specified query string parameter as the specified type.
+        /// </summary>
+        /// <typeparam name="TValue">The target type to convert to.</typeparam>
+        /// <param name="query">The query string values</param>
+        /// <param name="name">The query string parameter name</param>
+        /// <returns>A tuple of the converted value and a bool that determined is the operation was successful.</returns>
+        public static (TValue Value, bool Ok) Get<TValue>(this IQueryCollection query, string name)
+        {
+            var ok = query.TryGet(name, out TValue value);
+            return (value, ok);
+        }
+
+        /// <summary>
         /// Attempts to represent the specified form parameter as the specified type.
         /// </summary>
         /// <typeparam name="TValue">The target type to convert to.</typeparam>
@@ -45,6 +71,19 @@ namespace Microsoft.AspNetCore.Http
         public static bool TryGet<TValue>(this IFormCollection form, string name, out TValue value)
         {
             return TryGet(form, (d, k) => d[k], name, out value);
+        }
+
+        /// <summary>
+        /// Attempts to represent the specified form parameter as the specified type.
+        /// </summary>
+        /// <typeparam name="TValue">The target type to convert to.</typeparam>
+        /// <param name="form">The form values</param>
+        /// <param name="name">The form parameter name</param>
+        /// <returns>A tuple of the converted value and a bool that determined is the operation was successful.</returns>
+        public static (TValue Value, bool Ok) TryGet<TValue>(this IFormCollection form, string name)
+        {
+            var ok = form.TryGet(name, out TValue value);
+            return (value, ok);
         }
 
         private static bool TryGet<TValue, TState>(TState lookup, Func<TState, string, string> get, string name, out TValue value)
