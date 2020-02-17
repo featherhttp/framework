@@ -99,7 +99,7 @@ namespace Microsoft.AspNetCore.Http
             else if (typeof(TValue) == typeof(string))
             {
                 value = (TValue)(object)get(lookup, name);
-                return true;
+                return value != null;
             }
             else if (typeof(TValue) == typeof(Guid))
             {
