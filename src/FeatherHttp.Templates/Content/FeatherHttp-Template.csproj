@@ -4,6 +4,7 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <RestoreSources>
       $(RestoreSources);
+      https://api.nuget.org/v3/index.json;
       https://f.feedz.io/featherhttp/framework/nuget/index.json
     </RestoreSources>
   </PropertyGroup>
