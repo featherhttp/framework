@@ -1,6 +1,6 @@
 ## Feather HTTP
 
-[![feedz.io](https://img.shields.io/badge/endpoint.svg?url=https%3A%2F%2Ff.feedz.io%2Fdavidfowl%2Ffeatherhttp%2Fshield%2FFeatherHttp%2Flatest&label=FeatherHttp)](https://f.feedz.io/davidfowl/featherhttp/packages/FeatherHttp/latest/download)
+[![feedz.io](https://img.shields.io/badge/endpoint.svg?url=https%3A%2F%2Ff.feedz.io%2Ffeatherhttp%2Fframework%2Fshield%2FFeatherHttp%2Flatest&label=FeatherHttp)](https://f.feedz.io/featherhttp/framework/packages/FeatherHttp/latest/download)
 
 A lightweight low ceremony APIs for .NET Core applications.
 
@@ -36,7 +36,7 @@ class Program
 To use the `dotnet new` template, use the following command
 
 ```
-dotnet new -i FeatherHttp.Templates::{version} --nuget-source https://f.feedz.io/davidfowl/featherhttp/nuget/index.json
+dotnet new -i FeatherHttp.Templates::{version} --nuget-source https://f.feedz.io/featherhttp/framework/nuget/index.json
 ```
 
 Once you've installed the template, run:
@@ -54,10 +54,10 @@ To use CI builds add the following nuget feed:
 <configuration>
     <packageSources>
         <clear />
-        <add key="featherhttp" value="https://f.feedz.io/davidfowl/featherhttp/nuget/index.json" />
+        <add key="featherhttp" value="https://f.feedz.io/featherhttp/framework/nuget/index.json" />
         <add key="NuGet.org" value="https://api.nuget.org/v3/index.json" />
     </packageSources>
 </configuration>
 ```
 
-See the list of [versions](https://f.feedz.io/davidfowl/featherhttp/nuget/v3/packages/FeatherHttp/index.json)
+See the list of [versions](https://f.feedz.io/featherhttp/framework/nuget/v3/packages/FeatherHttp/index.json)
