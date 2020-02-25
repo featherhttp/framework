@@ -70,7 +70,7 @@ namespace Microsoft.AspNetCore.Http
         public static Task Conflict(this HttpResponse httpResponse) => httpResponse.StatusCode(StatusCodes.Status409Conflict);
         public static Task Conflict<T>(this HttpResponse httpResponse, T value) => httpResponse.StatusCode(StatusCodes.Status409Conflict, value);
 
-        public static Task Unauthroized(this HttpResponse httpResponse) => httpResponse.StatusCode(StatusCodes.Status401Unauthorized);
+        public static Task Unauthorized(this HttpResponse httpResponse) => httpResponse.StatusCode(StatusCodes.Status401Unauthorized);
         public static Task Unauthroized<T>(this HttpResponse httpResponse, T value) => httpResponse.StatusCode(StatusCodes.Status401Unauthorized, value);
 
         public static Task UnprocessableEntity(this HttpResponse httpResponse) => httpResponse.StatusCode(StatusCodes.Status422UnprocessableEntity);
