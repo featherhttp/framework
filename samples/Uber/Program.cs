@@ -41,9 +41,9 @@ class Program
 
         app.UseRouting();
 
-        app.MapGet("/", async context =>
+        app.MapGet("/", async http =>
         {
-            await context.Response.WriteAsync("Hello World");
+            await http.Response.WriteAsync("Hello World");
         });
 
         await app.RunAsync();

@@ -8,9 +8,9 @@ class Program
     {
         var app = WebApplication.Create(args);
 
-        app.MapGet("/", async context =>
+        app.MapGet("/", async http =>
         {
-            await context.Response.WriteJsonAsync(new { message = "Hello World" });
+            await http.Response.WriteJsonAsync(new { message = "Hello World" });
         });
 
         await app.RunAsync();
