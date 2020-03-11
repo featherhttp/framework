@@ -10,9 +10,9 @@ namespace FeatherHttp_Template
         {
             var app = WebApplication.Create(args);
 
-            app.MapGet("/", async context =>
+            app.MapGet("/", async http =>
             {
-                await context.Response.WriteAsync("Hello World!");
+                await http.Response.WriteAsync("Hello World!");
             });
 
             await app.RunAsync();
