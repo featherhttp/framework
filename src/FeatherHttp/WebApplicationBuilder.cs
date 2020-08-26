@@ -370,7 +370,6 @@ namespace Microsoft.AspNetCore.Builder
                 ContentRootFileProvider = Directory.Exists(ContentRootPath) ? (IFileProvider)new PhysicalFileProvider(ContentRootPath) : new NullFileProvider();
                 WebRootFileProvider = WebRootPath != null && Directory.Exists(Path.Combine(ContentRootPath, WebRootPath)) ? (IFileProvider)new PhysicalFileProvider(Path.Combine(ContentRootPath, WebRootPath)) : new NullFileProvider();
 
-
                 if (this.IsDevelopment())
                 {
                     StaticWebAssetsLoader.UseStaticWebAssets(this, configuration);
