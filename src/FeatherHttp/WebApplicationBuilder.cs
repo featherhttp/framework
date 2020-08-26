@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Hosting.StaticWebAssets;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -228,7 +229,7 @@ namespace Microsoft.AspNetCore.Builder
                 _environment.ApplicationName = config[HostDefaults.ApplicationKey] ?? _environment.ApplicationName;
                 _environment.ContentRootPath = config[HostDefaults.ContentRootKey] ?? _environment.ContentRootPath;
                 _environment.EnvironmentName = config[HostDefaults.EnvironmentKey] ?? _environment.EnvironmentName;
-                _environment.ResolveFileProviders();
+                _environment.ResolveFileProviders(config);
                 _configuration.ChangeBasePath(_environment.ContentRootPath);
 
                 _operations += b => b.ConfigureHostConfiguration(configureDelegate);
@@ -312,7 +313,7 @@ namespace Microsoft.AspNetCore.Builder
                 else if (key == WebHostDefaults.ContentRootKey)
                 {
                     _environment.ContentRootPath = value;
-                    _environment.ResolveFileProviders();
+                    _environment.ResolveFileProviders(_configuration);
 
                     _configuration.ChangeBasePath(value);
                 }
@@ -323,7 +324,7 @@ namespace Microsoft.AspNetCore.Builder
                 else if (key == WebHostDefaults.WebRootKey)
                 {
                     _environment.WebRootPath = value;
-                    _environment.ResolveFileProviders();
+                    _environment.ResolveFileProviders(_configuration);
                 }
 
                 _operations += b => b.UseSetting(key, value);
@@ -361,13 +362,18 @@ namespace Microsoft.AspNetCore.Builder
                     WebRootPath = wwwroot;
                 }
 
-                ResolveFileProviders();
+                ResolveFileProviders(new Configuration());
             }
 
-            public void ResolveFileProviders()
+            public void ResolveFileProviders(IConfiguration configuration)
             {
                 ContentRootFileProvider = Directory.Exists(ContentRootPath) ? (IFileProvider)new PhysicalFileProvider(ContentRootPath) : new NullFileProvider();
                 WebRootFileProvider = WebRootPath != null && Directory.Exists(Path.Combine(ContentRootPath, WebRootPath)) ? (IFileProvider)new PhysicalFileProvider(Path.Combine(ContentRootPath, WebRootPath)) : new NullFileProvider();
+
+                if (this.IsDevelopment())
+                {
+                    StaticWebAssetsLoader.UseStaticWebAssets(this, configuration);
+                }
             }
 
             public IFileProvider WebRootFileProvider { get; set; }
