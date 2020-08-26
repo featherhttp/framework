@@ -100,6 +100,11 @@ namespace Microsoft.AspNetCore.Builder
         public void Listen(params string[] urls)
         {
             var addresses = ServerFeatures.Get<IServerAddressesFeature>().Addresses;
+            if (addresses.IsReadOnly)
+            {
+                throw new NotSupportedException("Changing the URL isn't supported.");
+            }
+
             addresses.Clear();
             foreach (var u in urls)
             {
@@ -116,7 +121,7 @@ namespace Microsoft.AspNetCore.Builder
             // The assumption here is that this API is called by the application directly
             // this might give a better approximation of the default application name
             return new WebApplicationBuilder(
-                Assembly.GetCallingAssembly(), 
+                Assembly.GetCallingAssembly(),
                 builder => ConfigureBuilder(builder, args: null));
         }
 
@@ -128,7 +133,7 @@ namespace Microsoft.AspNetCore.Builder
         public static WebApplicationBuilder CreateBuilder(string[] args)
         {
             return new WebApplicationBuilder(
-                Assembly.GetCallingAssembly(), 
+                Assembly.GetCallingAssembly(),
                 builder => ConfigureBuilder(builder, args));
         }
 
