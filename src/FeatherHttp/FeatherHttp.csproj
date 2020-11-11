@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <PackageId>FeatherHttp</PackageId>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <PackageDescription>A lightweight low ceremony API for ASP.NET Core services.</PackageDescription>
     <Authors>David Fowler</Authors>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>

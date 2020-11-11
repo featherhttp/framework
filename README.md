@@ -15,20 +15,14 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 
-class Program
+var app = WebApplication.Create(args);
+
+app.MapGet("/", async http =>
 {
-    static async Task Main(string[] args)
-    {
-        var app = WebApplication.Create(args);
+    await http.Response.WriteAsync("Hello World");
+});
 
-        app.MapGet("/", async http =>
-        {
-            await http.Response.WriteAsync("Hello World");
-        });
-
-        await app.RunAsync();
-    }
-}
+await app.RunAsync();
 ```
 
 ## Tutorial

@@ -7,45 +7,39 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 
-class Program
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Configuration.AddYamlFile("appsettings.yml", optional: true);
+
+builder.Host.UseSerilog((context, configuration)
+    => configuration
+        .Enrich
+        .FromLogContext()
+        .WriteTo
+        .Console()
+    );
+
+builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
+
+builder.Host.ConfigureContainer<ContainerBuilder>(b =>
 {
-    static async Task Main(string[] args)
-    {
-        var builder = WebApplication.CreateBuilder(args);
+    // Register services using Autofac specific methods here
+});
 
-        builder.Configuration.AddYamlFile("appsettings.yml", optional: true);
+var app = builder.Build();
 
-        builder.Host.UseSerilog((context, configuration) 
-            => configuration
-                .Enrich
-                .FromLogContext()
-                .WriteTo
-                .Console()
-            );
+app.Listen("http://localhost:3000");
 
-        builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
-
-        builder.Host.ConfigureContainer<ContainerBuilder>(b =>
-        {
-            // Register services using Autofac specific methods here
-        });
-
-        var app = builder.Build();
-
-        app.Listen("http://localhost:3000");
-
-        if (app.Environment.IsDevelopment())
-        {
-            app.UseDeveloperExceptionPage();
-        }
-
-        app.UseRouting();
-
-        app.MapGet("/", async http =>
-        {
-            await http.Response.WriteAsync("Hello World");
-        });
-
-        await app.RunAsync();
-    }
+if (app.Environment.IsDevelopment())
+{
+    app.UseDeveloperExceptionPage();
 }
+
+app.UseRouting();
+
+app.MapGet("/", async http =>
+{
+    await http.Response.WriteAsync("Hello World");
+});
+
+await app.RunAsync();

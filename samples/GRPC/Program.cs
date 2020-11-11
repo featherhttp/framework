@@ -5,6 +5,18 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddGrpc();
+
+var app = builder.Build();
+
+app.Listen("http://localhost:3000");
+
+app.MapGrpcService<GreeterService>();
+
+await app.RunAsync();
+
 public class GreeterService : Greeter.GreeterBase
 {
     private readonly ILogger<GreeterService> _logger;
@@ -19,23 +31,5 @@ public class GreeterService : Greeter.GreeterBase
         {
             Message = "Hello " + request.Name
         });
-    }
-}
-
-class Program
-{
-    static async Task Main(string[] args)
-    {
-        var builder = WebApplication.CreateBuilder(args);
-
-        builder.Services.AddGrpc();
-
-        var app = builder.Build();
-
-        app.Listen("http://localhost:3000");
-
-        app.MapGrpcService<GreeterService>();
-
-        await app.RunAsync();
     }
 }
