@@ -267,7 +267,7 @@ namespace Microsoft.AspNetCore.Builder
             })
             .ConfigureLogging((hostingContext, logging) =>
             {
-                var isWindows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+                var isWindows = OperatingSystem.IsWindows();
 
                 // IMPORTANT: This needs to be added *before* configuration is loaded, this lets
                 // the defaults be overridden by the configuration.
