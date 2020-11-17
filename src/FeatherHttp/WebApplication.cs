@@ -58,6 +58,11 @@ namespace Microsoft.AspNetCore.Builder
         public IHostApplicationLifetime ApplicationLifetime => _host.Services.GetRequiredService<IHostApplicationLifetime>();
 
         /// <summary>
+        /// The logger factory for the application.
+        /// </summary>
+        public ILoggerFactory LoggerFactory => _host.Services.GetRequiredService<ILoggerFactory>();
+
+        /// <summary>
         /// The default logger for the application.
         /// </summary>
         public ILogger Logger { get; }
