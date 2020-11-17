@@ -7,9 +7,6 @@ builder.Services.AddReverseProxy().LoadFromConfig(builder.Configuration.GetSecti
 
 var app = builder.Build();
 
-app.MapReverseProxy(builder =>
-{
-    builder.UseProxyLoadBalancing();
-});
+app.MapReverseProxy();
 
 await app.RunAsync();
