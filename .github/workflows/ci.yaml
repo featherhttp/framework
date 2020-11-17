@@ -16,7 +16,7 @@ jobs:
     - name: Setup .NET Core SDK
       uses: actions/setup-dotnet@v1.7.2
       with:
-        version: 5.0.100
+        dotnet-version: 5.0.100
      
     - name: dotnet build
       run: dotnet build FeatherHttp.sln -c Release    
