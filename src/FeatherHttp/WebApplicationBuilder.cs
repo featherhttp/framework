@@ -353,7 +353,7 @@ namespace Microsoft.AspNetCore.Builder
             {
                 ContentRootPath = Directory.GetCurrentDirectory();
                 ApplicationName = (callingAssembly ?? Assembly.GetEntryAssembly()).GetName().Name;
-                EnvironmentName = Environments.Development;
+                EnvironmentName = Environments.Production;
 
                 // Default to /wwwroot if it exists.
                 var wwwroot = Path.Combine(ContentRootPath, "wwwroot");
