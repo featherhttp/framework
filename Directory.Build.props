@@ -3,9 +3,9 @@
   <PropertyGroup>
     <WarnOnPackingNonPackableProject>false</WarnOnPackingNonPackableProject>
     <NoWarn>$(NoWarn);NU5105</NoWarn>
-    <RepositoryUrl>https://github.com/davidfowl/FeatherHttp</RepositoryUrl>
-    <PackageProjectUrl>https://github.com/davidfowl/FeatherHttp</PackageProjectUrl>
-    <PackageReleaseNotes>https://github.com/davidfowl/FeatherHttp/releases</PackageReleaseNotes>
+    <RepositoryUrl>https://github.com/featherhttp/framework</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/featherhttp/framework</PackageProjectUrl>
+    <PackageReleaseNotes>https://github.com/featherhttp/framework/releases</PackageReleaseNotes>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryType>git</RepositoryType>
     <PackageTags>cloud API REST microservice web</PackageTags>
