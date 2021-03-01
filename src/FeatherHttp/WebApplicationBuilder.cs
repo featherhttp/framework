@@ -47,8 +47,8 @@ namespace Microsoft.AspNetCore.Builder
 
             Configuration.SetBasePath(environment.ContentRootPath);
             Logging = new LoggingBuilder(Services);
-            Server = _deferredWebHostBuilder = new DeferredWebHostBuilder(Configuration, environment);
-            Host = _deferredHostBuilder = new DeferredHostBuilder(Configuration, configureHost, environment);
+            Server = _deferredWebHostBuilder = new DeferredWebHostBuilder(Configuration, environment, Services);
+            Host = _deferredHostBuilder = new DeferredHostBuilder(Configuration, configureHost, environment, Services);
         }
 
         /// <summary>
@@ -88,6 +88,22 @@ namespace Microsoft.AspNetCore.Builder
         public WebApplication Build()
         {
             WebApplication sourcePipeline = null;
+
+            _hostBuilder.ConfigureServices(services =>
+            {
+                foreach (var s in Services)
+                {
+                    services.Add(s);
+                }
+            });
+
+            _hostBuilder.ConfigureAppConfiguration((hostContext, builder) =>
+            {
+                foreach (var s in Configuration.Sources)
+                {
+                    builder.Sources.Add(s);
+                }
+            });
 
             _deferredHostBuilder.ExecuteActions(_hostBuilder);
 
@@ -163,22 +179,6 @@ namespace Microsoft.AspNetCore.Builder
                 _deferredWebHostBuilder.ExecuteActions(web);
             });
 
-            _hostBuilder.ConfigureServices(services =>
-            {
-                foreach (var s in Services)
-                {
-                    services.Add(s);
-                }
-            });
-
-            _hostBuilder.ConfigureAppConfiguration((hostContext, builder) =>
-            {
-                foreach (var s in Configuration.Sources)
-                {
-                    builder.Sources.Add(s);
-                }
-            });
-
             var host = _hostBuilder.Build();
 
             return sourcePipeline = new WebApplication(host);
@@ -194,12 +194,15 @@ namespace Microsoft.AspNetCore.Builder
 
             private readonly WebHostEnvironment _environment;
             private readonly Configuration _configuration;
+            private readonly IServiceCollection _services;
 
-            public DeferredHostBuilder(Configuration configuration, Action<IHostBuilder> configureHost, WebHostEnvironment environment)
+            public DeferredHostBuilder(Configuration configuration, Action<IHostBuilder> configureHost, WebHostEnvironment environment, IServiceCollection services)
             {
                 _configuration = configuration;
                 _environment = environment;
-                _operations += configureHost;
+                _services = services;
+
+                configureHost(this);
             }
 
             public IHost Build()
@@ -238,7 +241,14 @@ namespace Microsoft.AspNetCore.Builder
 
             public IHostBuilder ConfigureServices(Action<HostBuilderContext, IServiceCollection> configureDelegate)
             {
-                _operations += b => b.ConfigureServices(configureDelegate);
+                // Run these immediately so that they are observable by the imperative code
+                configureDelegate(new HostBuilderContext(Properties)
+                {
+                    Configuration = _configuration,
+                    HostingEnvironment = _environment
+                },
+                _services);
+
                 return this;
             }
 
@@ -267,11 +277,13 @@ namespace Microsoft.AspNetCore.Builder
             private readonly WebHostEnvironment _environment;
             private readonly Configuration _configuration;
             private readonly Dictionary<string, string> _settings = new Dictionary<string, string>();
+            private readonly IServiceCollection _services;
 
-            public DeferredWebHostBuilder(Configuration configuration, WebHostEnvironment environment)
+            public DeferredWebHostBuilder(Configuration configuration, WebHostEnvironment environment, IServiceCollection services)
             {
                 _configuration = configuration;
                 _environment = environment;
+                _services = services;
             }
 
             IWebHost IWebHostBuilder.Build()
@@ -287,7 +299,12 @@ namespace Microsoft.AspNetCore.Builder
 
             public IWebHostBuilder ConfigureServices(Action<WebHostBuilderContext, IServiceCollection> configureServices)
             {
-                _operations += b => b.ConfigureServices(configureServices);
+                configureServices(new WebHostBuilderContext
+                {
+                    Configuration = _configuration,
+                    HostingEnvironment = _environment
+                },
+                _services);
                 return this;
             }
 
